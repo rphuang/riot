@@ -24,12 +24,11 @@ def router(root, path1, path2, path3):
     return BaseRequestHandler.processRequest(request)
 
 if __name__ == '__main__':
-    port = 8688
+    port = 8008
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
 
-    # for user pi: cGk6SlRSUF8xMTMw   for user guest: Z3Vlc3Q6     for user test: dGVzdDojI1Qzc3QhIQ==
-    authorizationList = ['cGk6SlRSUF8xMTMw', 'dGVzdDojI1Qzc3QhIQ==', 'Z3Vlc3Q6']
+    authorizationList = None
     # create proper RequestHandlers
     sysHandler = PiSysRequestHandler(authorizationList=authorizationList)
     gpioHandler = PiGpioRequestHandler(authorizationList=authorizationList)

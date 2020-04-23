@@ -8,6 +8,7 @@ There followings are in the repository.
 * videoStreaming package - an HTTP video streming service based on Raspberry Pi camera. Usage example can be found in the picarServer.
 * picarServer module - this is the server for Adeept Mars PiCar. Besides the otiginal TCP support it added HTTP support. It is (mostly) backward compatible with existing TCP client.
 * Client IOT lib (.NET C#) - a set of classes that encapsulates sensor/device compoennts on the server via HTTP. For now, mostly limited to what in Adeept Mars PiCar.
+* Simple Android app (Xamarin based) - to control Adeept Mars PiCar via HTTP 
 * examples - contains simple example code for using the packages
 
 There bounds to be errors and things to improve, so please don't hesitate to send corrections and feedbacks.
@@ -29,7 +30,6 @@ There bounds to be errors and things to improve, so please don't hesitate to sen
         python3 path-to-installed-folder/picarServer/server.py path-to-installed-folder/picarServer/picarconfig.txt
     
 # Coming 
-* Simple Android app (Xamarin based) - to control Adeept Mars PiCar via HTTP 
 * ServiceStack based HTTP server for RIOT that supports connected Arduino devices with REST-ish non-HTTP communication.
 
 # Details
@@ -116,7 +116,7 @@ The lib has two parts - one set of interfaces for each component and a second se
 ## PiCar Android App
 The PiCar Android App is built with the IotClientLib and Xamarin Forms. It should be relative easy to make it work on iOS.
 * Control Adeept Mars PiCar via HTTP
-* Video streaming via HTTP
+* Video streaming via HTTP. Known Issue: video doesn't fit the screen.
 * Display server CPU memory information
 * Shutdown/reboot and user commands
 

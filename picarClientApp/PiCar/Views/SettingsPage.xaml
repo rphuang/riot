@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="PiCar.Views.SettingsPage">
+    <ContentPage.ToolbarItems>
+        <!--ToolbarItem Text="Exit" Clicked="ExitSettings_Clicked" /-->
+        <ToolbarItem Text="Save" Clicked="SaveSettings_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="4">
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Topics File" FontSize="Medium" />
+                    <Label Text="{Binding TopicsFile}" FontSize="Medium" HorizontalOptions="EndAndExpand" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="PiStats Refresh Rate" FontSize="Medium" />
+                    <Entry Text="{Binding MonitorRefreshRate}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <Label Text="---- PiCar Control" FontSize="Medium" />
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Motor Speed" FontSize="Medium" />
+                    <Entry Text="{Binding MotorSpeed}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Steering Angle" FontSize="Medium" />
+                    <Entry Text="{Binding SteeringAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Delta Camera Angle" FontSize="Medium" />
+                    <Entry Text="{Binding DeltaCameraAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <Label Text="---- PiCar Distance Scan" FontSize="Medium" />
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Horizontal Start Angle" FontSize="Medium" />
+                    <Entry Text="{Binding HorizontalStartAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Horizontal End Angle" FontSize="Medium" />
+                    <Entry Text="{Binding HorizontalEndAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Horizontal Increment Angle" FontSize="Medium" />
+                    <Entry Text="{Binding HorizontalIncAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Vertical Start Angle" FontSize="Medium" />
+                    <Entry Text="{Binding VerticalStartAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Vertical End Angle" FontSize="Medium" />
+                    <Entry Text="{Binding VerticalEndAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Vertical Increment Angle" FontSize="Medium" />
+                    <Entry Text="{Binding VerticalIncAngle}" FontSize="Medium" HorizontalOptions="EndAndExpand" WidthRequest="60" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

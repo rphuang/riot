@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="PiCar.Views.MonitorTopicPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Exit" Clicked="ExitEdit_Clicked" />
+        <ToolbarItem Text="Save" Clicked="SaveEdit_Clicked" />
+        <ToolbarItem Text="Add" Clicked="Add_Clicked" />
+        <ToolbarItem Text="Delete" Clicked="Delete_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Padding="8">
+            <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                <Label Text="Server Name" FontSize="Medium" />
+                <Label Text="{Binding Name}" FontSize="Medium" HorizontalOptions="EndAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                <Label Text="Address" FontSize="Medium" />
+                <Entry Text="{Binding Server}" FontSize="Medium" HorizontalOptions="EndAndExpand" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                <Label Text="Credential" FontSize="Medium" />
+                <Entry Text="{Binding Credential}" FontSize="Medium" HorizontalOptions="EndAndExpand" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

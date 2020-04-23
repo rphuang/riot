@@ -1,8 +1,8 @@
-http -a guest: 192.168.1.111:8001/sys
-http -a guest: 192.168.1.111:8001/sys/cpu
-http -a guest: 192.168.1.111:8001/gpio/3
-http -a guest: 192.168.1.111:8001/gpio
-http -a guest: 192.168.1.111:8001/gpio 3=1 7/mode=0
-http -a guest: 192.168.1.111:8001/picar motor=100
-http -a guest: 192.168.1.111:8001/picar motor=-100 servo=-40
-http -a guest: 192.168.1.111:8001/picar servoCamH=30 servoCamV=30
+http 192.168.1.111:8001/sys
+http 192.168.1.111:8001/sys/cpu
+http 192.168.1.111:8001/gpio/3
+http 192.168.1.111:8001/gpio
+http 192.168.1.111:8001/gpio 3=1 7/mode=0
+http 192.168.1.111:8001/picar motor=100
+http 192.168.1.111:8001/picar motor=-100 servo=-40
+http 192.168.1.111:8001/picar servoCamH=30 servoCamV=30

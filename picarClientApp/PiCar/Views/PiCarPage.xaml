@@ -6,7 +6,6 @@
              mc:Ignorable="d"
              x:Class="PiCar.Views.PiCarPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Edit" Clicked="EditButton_Clicked" />
         <ToolbarItem Text="Gpio" Clicked="GpioButton_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>

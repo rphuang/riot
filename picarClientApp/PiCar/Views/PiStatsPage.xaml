@@ -7,7 +7,6 @@
              x:Class="PiCar.Views.PiStatsPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cmd" Clicked="CommandButton_Clicked" />
-        <ToolbarItem Text="Edit" Clicked="EditButton_Clicked" />
         <ToolbarItem x:Name="StartStopButton" Text="Stop" Clicked="StartStopButton_Clicked" />
         <ToolbarItem Text="Gpio" Clicked="GpioButton_Clicked" />
     </ContentPage.ToolbarItems>

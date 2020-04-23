@@ -98,7 +98,8 @@ namespace PiCar.Models
             if (string.IsNullOrEmpty(value)) return;
             string[] parts = value.Split(ColonDelimiter);
             ServerAddress = parts[0];
-            ServerPort = int.Parse(parts[1]);
+            if (parts.Length > 1) ServerPort = int.Parse(parts[1]);
+            else ServerPort = 80;
         }
 
         private void ParseCredential()
@@ -107,7 +108,8 @@ namespace PiCar.Models
             if (string.IsNullOrEmpty(value)) return;
             string[] parts = value.Split(ColonDelimiter);
             UserName = parts[0];
-            UserPassword = parts[1];
+            if (parts.Length > 1) UserPassword = parts[1];
+            else UserPassword = string.Empty;
         }
 
         private static readonly char[] ColonDelimiter = { ':' };

@@ -16,12 +16,30 @@ namespace PiCar.Models
         }
 
         /// <summary>
-        /// The user ID when personalization is on
+        /// The TopicsFile
         /// </summary>
         public string TopicsFile
         {
             get { return GetOrAddSetting(nameof(TopicsFile), "index.csv"); }
             set { SetSetting(nameof(TopicsFile), value); }
+        }
+
+        /// <summary>
+        /// The server address & port
+        /// </summary>
+        public string Server
+        {
+            get { return GetOrAddSetting(nameof(Server), string.Empty); }
+            set { SetSetting(nameof(Server), value); }
+        }
+
+        /// <summary>
+        /// The server credential
+        /// </summary>
+        public string Credential
+        {
+            get { return GetOrAddSetting(nameof(Credential), string.Empty); }
+            set { SetSetting(nameof(Credential), value); }
         }
 
         /// <summary>
@@ -124,6 +142,7 @@ namespace PiCar.Models
         private Settings()
             : base(PiCarSettingsFolder, PiCarSettingsFile)
         {
+            LoadSettings();
         }
 
         private const string PiCarSettingsFolder = "docs";

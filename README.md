@@ -28,6 +28,12 @@ There bounds to be errors and things to improve, so please don't hesitate to sen
     5. run picar server
 
         python3 path-to-installed-folder/picarServer/server.py path-to-installed-folder/picarServer/picarconfig.txt
+
+4. Configure PiCar Android client
+    1. grant storage permission for PiCar.Android app after deploy to device
+    2. goto Settings - edit Server (address:port) and Credential (user:password) fields
+    3. click Save
+    4. close & restart
     
 # Coming 
 * ServiceStack based HTTP server for RIOT that supports connected Arduino devices with REST-ish non-HTTP communication.

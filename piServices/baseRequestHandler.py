@@ -109,7 +109,7 @@ class BaseRequestHandler(object):
             result = []
             for key in BaseRequestHandler._handlers:
                 handler = BaseRequestHandler._handlers[key]
-                result.append({'name': handler.name, 'url': request.host_url + key})
+                result.append({'name': handler.name, 'path': key, 'url': request.host_url + key})
             response = makeJsonResponse(200, result)
         else:
             timePrint('%s %s client: %s handler: N.A.' %(method, request.url, request.remote_addr))

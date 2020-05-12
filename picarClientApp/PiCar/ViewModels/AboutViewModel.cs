@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace PiCar.ViewModels
 {
-    public class AboutViewModel //: BaseViewModel
+    public class AboutViewModel
     {
         public AboutViewModel()
         {

@@ -1,4 +1,5 @@
 ﻿using HttpLib;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 
@@ -83,6 +84,18 @@ namespace IotClientLib
             _lastMessage = _request.Post(url, json, _requestHeaderParams, out httpResponse, true);
             _lastStatusCode = httpResponse == null ? 0 : (int)httpResponse.StatusCode;
             return _lastMessage;
+        }
+
+        /// <summary>
+        /// gets available endpoints from the server
+        /// </summary>
+        /// <returns>returns a list of endpoints</returns>
+        public IList<HttpEndpoint> DiscoverAvailableEndpoints()
+        {
+            string json = Get(string.Empty);
+            // deserialize
+            List<HttpEndpoint> response = JsonConvert.DeserializeObject<List<HttpEndpoint>>(json);
+            return response;
         }
 
         /// <summary>

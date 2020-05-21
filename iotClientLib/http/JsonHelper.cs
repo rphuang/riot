@@ -48,6 +48,11 @@ namespace IotClientLib
         public IList<int> PosH { get; set; }
         public IList<int> PosV { get; set; }
     }
+    internal class HygroThermoData
+    {
+        public double Humidity { get; set; }
+        public double Temperature { get; set; }
+    }
 
     internal static class JsonHelper
     {

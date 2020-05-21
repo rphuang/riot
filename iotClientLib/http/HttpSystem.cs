@@ -15,8 +15,8 @@ namespace IotClientLib
         /// <summary>
         /// constructor
         /// </summary>
-        public HttpSystem(string name, HttpIotClient client, HttpNode parent)
-            : base("sys", name, client, parent)
+        public HttpSystem(string path, string name, HttpIotClient client, HttpNode parent)
+            : base(path, name, client, parent)
         {
             Cpu = new HttpCpu("cpu", name, client, this);
             Memory = new HttpMemory("memory", name, client, this);

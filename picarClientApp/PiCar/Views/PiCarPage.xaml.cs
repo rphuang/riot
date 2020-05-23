@@ -42,7 +42,7 @@ namespace PiCar.Views
 
         private void InitializePiCar()
         {
-            _piCar = new HttpPiCar("EricCar", _controlTopic.ServerAddress, _controlTopic.ServerPort, 8002, _controlTopic.UserName, _controlTopic.UserPassword);
+            _piCar = HttpPiCar.CreatePiCar("EricCar", _controlTopic.ServerAddress, _controlTopic.ServerPort, _controlTopic.VideoPort, _controlTopic.UserName, _controlTopic.UserPassword);
             _cameraHorizontalServo = new ServoStat { Servo = _piCar.HeadHorizontalServo };
             _cameraVertialServo = new ServoStat { Servo = _piCar.HeadVerticalServo };
             _rightLed = new LedState { Led = _piCar.RightLed };
@@ -80,7 +80,7 @@ namespace PiCar.Views
         {
             if (!string.IsNullOrEmpty(status))
             {
-                responseLabel.Text = status;
+                responseLabel.Text = status.Replace("\n", "");
             }
         }
 

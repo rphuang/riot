@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PiCar.Services
 {
@@ -40,13 +39,13 @@ namespace PiCar.Services
             var sysEndpoints = endpoints.Where((HttpEndpoint item) => string.Equals(item.Name, "PiSystem", StringComparison.OrdinalIgnoreCase));
             if (sysEndpoints.Count() > 0)
             {
-                string path = sysEndpoints[0].Path;
+                string path = sysEndpoints.First().Path;
                 _httpSystem = new HttpSystem(path, name, _httpIotClient, null);
             }
             var dhtEndpoints = endpoints.Where((HttpEndpoint item) => string.Equals(item.Name, "HygroThermoSensor", StringComparison.OrdinalIgnoreCase));
             if (dhtEndpoints.Count() > 0)
             {
-                string path = dhtEndpoints[0].Path;
+                string path = dhtEndpoints.First().Path;
                 _httpHygroThermoSensor = new HttpHygroThermoSensor(path, "HygroThermoSensor", _httpIotClient, null);
             }
         }

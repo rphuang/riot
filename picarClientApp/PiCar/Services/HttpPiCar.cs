@@ -1,7 +1,7 @@
 ﻿using IotClientLib;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace PiCar.Services
@@ -24,20 +24,30 @@ namespace PiCar.Services
     class HttpPiCar : HttpNode
     {
         /// <summary>
-        /// constructor
+        /// create and initialize a PiCar
         /// </summary>
-        public HttpPiCar(string name)
-            : base("piCar", name, null, null)
+        public static HttpPiCar CreatePiCar(string name, string server, int port, int videoPort, string user, string password)
         {
-        }
+            HttpIotClient httpIotClient = new HttpIotClient();
+            httpIotClient.SetServer(server, port);
+            httpIotClient.SetCredential(user, password);
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public HttpPiCar(string name, string server, int port, int videoPort, string user, string password)
-            : base("piCar", name, null, null)
-        {
-            Initialize(server, port, videoPort, user, password);
+            // discover server endpoints and paths
+            IList<HttpEndpoint> endpoints = httpIotClient.DiscoverAvailableEndpoints();
+            var picarEndpoints = endpoints.Where((HttpEndpoint item) => string.Equals(item.Name, "picar", StringComparison.OrdinalIgnoreCase));
+            if (picarEndpoints.Count() == 0) return null;   // not picar
+
+            HttpSystem httpSystem = null;
+            var sysEndpoints = endpoints.Where((HttpEndpoint item) => string.Equals(item.Name, "PiSystem", StringComparison.OrdinalIgnoreCase));
+            if (sysEndpoints.Count() > 0)
+            {
+                string path = sysEndpoints.First().Path;
+                httpSystem = new HttpSystem(path, "Server", httpIotClient, null);
+            }
+
+            string piCarPath = picarEndpoints.First().Path;
+            HttpPiCar picar = new HttpPiCar(piCarPath, name, httpIotClient, httpSystem, server, videoPort);
+            return picar;
         }
 
         /// <summary>
@@ -175,18 +185,19 @@ namespace PiCar.Services
 
         public string VideoStreamUrl { get; set; }
 
-        private IotColor Convert(Color color)
+        /// <summary>
+        /// constructor
+        /// </summary>
+        private HttpPiCar(string path, string name, HttpIotClient httpIotClient, HttpSystem httpSystem, string server, int videoPort)
+            : base(path, name, null, null)
         {
-            return new IotColor(color.R, color.G, color.B);
+            Client = httpIotClient;
+            Server = httpSystem;
+            Initialize(server, videoPort);
         }
 
-        private string Initialize(string server, int port, int videoPort, string user, string password)
+        private string Initialize(string server, int videoPort)
         {
-            Client = new HttpIotClient();
-            Client.SetServer(server, port);
-            Client.SetCredential(user, password);
-
-            Server = new HttpSystem("Server", Client, null);
             Drive = new HttpMotor("motor", "Drive", Client, this);
             Steering = new HttpServo("servo", "Steering", Client, this) { AngleOffset = SteeringOffset };
             HeadHorizontalServo = new HttpServo("servoCamH", "HeadHorizontalServo", Client, this);
@@ -200,6 +211,11 @@ namespace PiCar.Services
             string msg = Reset();
             _connected = Client.LastStatusCode == 200;
             return msg;
+        }
+
+        private IotColor Convert(Color color)
+        {
+            return new IotColor(color.R, color.G, color.B);
         }
 
         private string PostSysCommand(string command)

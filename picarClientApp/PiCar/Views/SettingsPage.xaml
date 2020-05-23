@@ -14,11 +14,15 @@
             <StackLayout Padding="4">
                 <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Label Text="Server" FontSize="Medium" />
-                    <Entry Text="{Binding Server}" FontSize="Medium" HorizontalOptions="EndAndExpand"  WidthRequest="160" />
+                    <Entry Text="{Binding Server}" FontSize="Medium" HorizontalOptions="EndAndExpand"  WidthRequest="180" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Label Text="Credential" FontSize="Medium" />
-                    <Entry Text="{Binding Credential}" FontSize="Medium" HorizontalOptions="EndAndExpand"  WidthRequest="160" />
+                    <Entry Text="{Binding Credential}" FontSize="Medium" HorizontalOptions="EndAndExpand"  WidthRequest="180" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Label Text="Video Port" FontSize="Medium" />
+                    <Entry Text="{Binding VideoPort}" FontSize="Medium" HorizontalOptions="EndAndExpand"  WidthRequest="60" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Label Text="PiStats Refresh Rate" FontSize="Medium" />

@@ -56,37 +56,34 @@ namespace PiCar.Views
             gridList.Clear();
             int rowIndex = 0;
 
-            AddLabel("Server Address", gridList, rowIndex, 0, 2);
-            AddLabel(_monitorTopic.Server, gridList, rowIndex, 3, 2);
-            rowIndex++;
-            AddLabel("Core Temperature", gridList, rowIndex, 0, 2);
-            AddLabel(cpu.Temperature.ToString(), gridList, rowIndex, 3, 2);
-            rowIndex++;
+            DisplayHeaderAndValueRow("Server Address", _monitorTopic.Server, gridList, rowIndex++, 3);
+            DisplayHeaderAndValueRow("CPU Core Temperature", cpu.Temperature.ToString(), gridList, rowIndex++, 3);
             AddLabel("Usage", gridList, rowIndex, 1, 1);
             AddLabel("User", gridList, rowIndex, 2, 1);
             AddLabel("System", gridList, rowIndex, 3, 1);
             AddLabel("Idle", gridList, rowIndex, 4, 1);
             rowIndex++;
-            DisplayCpuRow(cpu, gridList, rowIndex);
-            rowIndex++;
+            DisplayCpuRow(cpu, gridList, rowIndex++);
             if (cpu.Cores != null)
             {
                 foreach (IotCpu core in cpu.Cores.Values)
                 {
-                    DisplayCpuRow(core, gridList, rowIndex);
-                    rowIndex++;
+                    DisplayCpuRow(core, gridList, rowIndex++);
                 }
             }
-            AddLabel("Total Memory (MB)", gridList, rowIndex, 0, 2);
-            AddLabel(memory.Total.ToString(), gridList, rowIndex, 2, 2);
-            rowIndex++;
-            DisplayMemoryRow("Used Memory (MB)", memory.Used, memory.Total, gridList, rowIndex);
-            rowIndex++;
-            DisplayMemoryRow("Cached Memory (MB)", memory.Cached, memory.Total, gridList, rowIndex);
-            rowIndex++;
-            DisplayMemoryRow("Free Memory (MB)", memory.Free, memory.Total, gridList, rowIndex);
-            rowIndex++;
-            DisplayMemoryRow("Available Memory (MB)", memory.Available, memory.Total, gridList, rowIndex);
+            DisplayHeaderAndValueRow("Total Memory (MB)", memory.Total.ToString(), gridList, rowIndex++, 2);
+            DisplayMemoryRow("Used Memory (MB)", memory.Used, memory.Total, gridList, rowIndex++);
+            DisplayMemoryRow("Cached Memory (MB)", memory.Cached, memory.Total, gridList, rowIndex++);
+            DisplayMemoryRow("Free Memory (MB)", memory.Free, memory.Total, gridList, rowIndex++);
+            DisplayMemoryRow("Available Memory (MB)", memory.Available, memory.Total, gridList, rowIndex++);
+
+            HttpHygroThermoSensor hygroThermoSensor = _piStatsService.HygroThermoSensor;
+            if (hygroThermoSensor != null)
+            {
+                string response = hygroThermoSensor.Get();
+                DisplayHeaderAndValueRow("Humidity (%)", hygroThermoSensor.Humidity.ToString(), gridList, rowIndex++, 2);
+                DisplayHeaderAndValueRow("Temperature (C)", hygroThermoSensor.Temperature.ToString(), gridList, rowIndex++, 2);
+            }
         }
 
         private void DisplayCpuRow(IotCpu cpu, IGridList<View> gridList, int rowIndex)
@@ -104,6 +101,12 @@ namespace PiCar.Views
             AddLabel(value.ToString(), gridList, rowIndex, 2, 1);
             string percent = string.Format("{0:0.00}%", (100.0 * value / total));
             AddLabel(percent, gridList, rowIndex, 3, 1);
+        }
+
+        private void DisplayHeaderAndValueRow(string header, string value, IGridList<View> gridList, int rowIndex, int valueColumn = 2)
+        {
+            AddLabel(header, gridList, rowIndex, 0, 2);
+            AddLabel(value.ToString(), gridList, rowIndex, valueColumn, 2);
         }
 
         private void AddLabel(string text, IGridList<View> gridList, int row, int col, int colSpan = 1)

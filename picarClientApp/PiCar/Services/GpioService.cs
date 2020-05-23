@@ -1,7 +1,7 @@
 ﻿using IotClientLib;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace PiCar.Services
 {
@@ -29,7 +29,15 @@ namespace PiCar.Services
             _httpIotClient.SetServer(serverAddress, serverPort);
             _httpIotClient.SetCredential(userName, userPassword);
 
-            _httpGpio = new HttpGpio("gpio", name, _httpIotClient, null);
+            // discover the gpio path from the server
+            string path = "gpio";
+            IList<HttpEndpoint> endpoints = _httpIotClient.DiscoverAvailableEndpoints();
+            var gpioEndpoints = endpoints.Where((HttpEndpoint item) => string.Equals(item.Name, "PiGpio", StringComparison.OrdinalIgnoreCase));
+            if (gpioEndpoints.Count() > 0)
+            {
+                path = gpioEndpoints.First().Path;
+            }
+            _httpGpio = new HttpGpio(path, name, _httpIotClient, null);
         }
 
         private HttpIotClient _httpIotClient;

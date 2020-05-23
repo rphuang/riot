@@ -43,6 +43,15 @@ namespace PiCar.Models
         }
 
         /// <summary>
+        /// The server video port
+        /// </summary>
+        public int VideoPort
+        {
+            get { return GetOrAddSetting(nameof(VideoPort), 8002); }
+            set { SetSetting(nameof(VideoPort), value); }
+        }
+
+        /// <summary>
         /// the Monitor Refresh Rate in seconds
         /// </summary>
         public double MonitorRefreshRate

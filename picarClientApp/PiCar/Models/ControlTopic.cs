@@ -36,5 +36,14 @@ namespace PiCar.Models
             Dictionary<string, Property> properties = new Dictionary<string, Property>(this.Properties);
             return new ControlTopic(properties);
         }
+
+        /// <summary>
+        /// The server video port
+        /// </summary>
+        public int VideoPort
+        {
+            get { return GetPropertyValue<int>(nameof(VideoPort)); }
+            set { SetPropertyValue(nameof(VideoPort), value); }
+        }
     }
 }

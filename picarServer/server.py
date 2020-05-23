@@ -57,7 +57,7 @@ if __name__ == '__main__':
         picarConfig.autoSave = True
         picarConfig.save()
 
-        authorizationList = picarConfig.getOrAddInt('PiCar.AuthorizationList', '')
+        authorizationList = picarConfig.getOrAdd('PiCar.AuthorizationList', '')
         # create proper RequestHandlers
         sysHandler = PiSysRequestHandler(authorizationList=authorizationList)
         gpioHandler = PiGpioRequestHandler(authorizationList=authorizationList)

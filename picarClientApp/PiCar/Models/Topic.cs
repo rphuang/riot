@@ -50,15 +50,6 @@ namespace PiCar.Models
         }
 
         /// <summary>
-        /// the title of the topic
-        /// </summary>
-        public string Title
-        {
-            get { return GetPropertyValue<string>(nameof(Title)); }
-            set { SetPropertyValue(nameof(Title), value); }
-        }
-
-        /// <summary>
         /// the type of the topic
         /// </summary>
         public string TopicType
@@ -133,27 +124,13 @@ namespace PiCar.Models
 
         private static Dictionary<string, Topic> InitializeTopicsFromLocalStorage()
         {
-            //string filePath = GetTopicsFilePath(false);
-            //if (File.Exists(filePath))
-            //{
-            //    XsvFileParser parser = new XsvFileParser { FirstRowHeader = true, UseDelimiterFromExtension = true };
-            //    parser.XsvParser.ItemFactory = TopicFactory.Instance;
-            //    ItemGroup itemGroup = parser.ParseXsvFile(filePath);
-            //    Dictionary<string, Topic> topics = new Dictionary<string, Topic>();
-            //    foreach (Topic item in itemGroup.Items)
-            //    {
-            //        topics.Add(item.Id, item);
-            //    }
-            //    return topics;
-            //}
-
             string server = Settings.Instance.Server;
             if (!string.IsNullOrEmpty(server))
             {
                 Dictionary<string, Topic> topics = new Dictionary<string, Topic>();
                 string credential = Settings.Instance.Credential;
                 AddTopicToDictionary(topics, new MonitorTopic { Id = "PiStats - Pi Car", Name = "Pi Car", Server = server, Credential = credential });
-                AddTopicToDictionary(topics, new ControlTopic { Id = "PiControl - Pi Car", Name = "Pi Car", Server = server, Credential = credential });
+                AddTopicToDictionary(topics, new ControlTopic { Id = "PiControl - Pi Car", Name = "Pi Car", Server = server, Credential = credential, VideoPort = Settings.Instance .VideoPort});
                 return topics;
             }
 

@@ -103,7 +103,7 @@ class BaseRequestHandler(object):
             except Exception as e:
                 timePrint('Exception handling request: ' + str(e))
                 traceback.print_exc()
-                response = makeJsonResponse(500, { KeyResponse: 'Exception: ' + str(e) })
+                response = makeJsonResponse(500, { 'response': 'Exception: ' + str(e) })
         elif len(key) == 0:
             # send available discovery paths if rootPath is not specified
             result = []

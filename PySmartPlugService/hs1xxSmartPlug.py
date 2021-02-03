@@ -72,6 +72,7 @@ class Hs1xxSmartPlug():
         response = {}
         nodeLowercase = node.lower()
         if nodeLowercase == 'system':
+            errorCount = 0
             validDataIds = {'deviceId': 'set_device_id', 'hwId': 'set_hw_id', 'mac': 'set_mac_addr', 'alias': 'set_dev_alias'}
             #validDataIds2 = {'led_off': 'set_led_off', 'relay_state': 'set_relay_state'}
             for key, value in args.items():
@@ -88,9 +89,14 @@ class Hs1xxSmartPlug():
                     self.smartPlug.command(('system', 'set_relay_state', {'state': int(value)}))
                     timePrint('%s set_relay_state: %s' %(self.id, str(value)))
                     response[key] = int(value)
-                #else:
-                #    statusCode = 400
-                #    response[KeyResponse] = 'InvalidDataId'
+                else:
+                    errorCount =+ 1
+            if errorCount > 0:
+                if len(response) > 0:
+                    statusCode = 206
+                else:
+                    statusCode = 400
+                    response[KeyResponse] = 'NoValidDataId'
 
         elif nodeLowercase == 'cmd':
             delay = 1

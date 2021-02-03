@@ -16,9 +16,11 @@ This python code is intended to isolate smart plugs in a private WIFI hotspot wi
 3. Setup the python software modules
    1. download/clone the respository
    2. Install the Python packages with pip3
+```
        cd path-to-installed-folder
        sudo python3 pip3 install .   * 
-   3. copy this folder PySmartPlugService to the Raspberry Pi
+```
+   3. copy this folder pySmartPlugService to the Raspberry Pi
    4. install from https://github.com/vrachieru/tplink-smartplug-api. Alternatively, just download the code and copy the api.py to above folder and rename to tplink_smartplug.py
 4. Add the smart plug to the testserver.py 
     kasaHandler.addSmartPlug('plug01', '192.168.1.85')
@@ -28,9 +30,11 @@ This python code is intended to isolate smart plugs in a private WIFI hotspot wi
     http://192.168.0.33:3333/dev/plug01/system
 
 # Test commands using httpi from a Windows machine
+```
 http 192.168.0.33:3333/dev/plug01/system
 http 192.168.0.33:3333/dev/plug01/system/alias
 http 192.168.0.33:3333/dev/plug01/time
 http 192.168.0.33:3333/dev/plug01/time/time
 http 192.168.0.33:3333/dev/plug01/system relay_state=0 led_off=0
 http "192.168.0.33:3333/dev/plug01/emeter?year=2021&month=1"
+```

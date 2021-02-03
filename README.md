@@ -5,7 +5,7 @@ It supports the Adeept Mars PiCar. However, it is designed with flexibility and 
 The followings are in the repository.
 * piServices package - an HTTP service with simple REST IOT protocol for client-server communication. It provides basic gpio, cpu, and memory data via HTTP. Extensibility example can be found in the picarServer.
 * iotServerLib package - a set of classes that encapsulates sensor/drive compoennts (for now mostly limited to what in Adeept Mars PiCar). Usage example can be found in the picarServer.
-* PySmartPlugService module - a RIOT service that provide remote access/control to TP-Link Kasa HS1xx smart plug.
+* pySmartPlugService module - a RIOT service that provide remote access/control to TP-Link Kasa HS1xx smart plug.
 * videoStreaming package - an HTTP video streming service based on Raspberry Pi camera. Usage example can be found in the picarServer.
 * picarServer module - this is the server for Adeept Mars PiCar. Besides the otiginal TCP support it added HTTP support. It is (mostly) backward compatible with existing TCP client.
 * Client IOT lib (.NET C#) - a set of classes that encapsulates sensor/device compoennts on the server via HTTP. For now, mostly limited to what in Adeept Mars PiCar.
@@ -15,19 +15,19 @@ The followings are in the repository.
 # Getting Started
 1. download/clone the respository
 2. Install the Python packages with pip3
-
+```
     cd path-to-installed-folder
     sudo python3 pip3 install .
-
+```
 3. Install and run PiCar server
     1. create folders data & templates under path-to-installed-folder/picarServer
     2. copy files from path-to-installed-folder/videoStreaming/data to path-to-installed-folder/picarServer/data
     3. copy files from path-to-installed-folder/videoStreaming/templates to path-to-installed-folder/picarServer/templates
     4. adjust config file path-to-installed-folder/picarServer/picarconfig.txt
     5. run picar server
-
+```
         python3 path-to-installed-folder/picarServer/server.py path-to-installed-folder/picarServer/picarconfig.txt
-
+```
 4. Configure PiCar Android client
     1. grant storage permission for PiCar.Android app after deploy to device
     2. goto Settings - edit Server (address:port) and Credential (user:password) fields
@@ -35,7 +35,7 @@ The followings are in the repository.
     4. close & restart
 
 5. Install smart plug RIOT service (see readme.md in the folder for more)
-    1. copy this folder PySmartPlugService to the Raspberry Pi
+    1. copy this folder pySmartPlugService to the Raspberry Pi
     2. install from https://github.com/vrachieru/tplink-smartplug-api. Alternatively, just download the code and copy the api.py to above folder and rename to tplink_smartplug.py
     
 # Coming 
@@ -74,7 +74,7 @@ The Python piServices package implements the base classes to support RIOT HTTP p
 * PiGpioRequestHandler - this class is derived from BaseRequestHandler to handle requests for GET and POST from/to Raspberry Pi GPIO.
 * PiSysRequestHandler - this class is derived from BaseRequestHandler to handle requests for GET information from Raspberry Pi system (cpu, memory). The POST allows executing commands on the Pi.
 
-## PySmartPlugService - Python module
+## pySmartPlugService - Python module
 This is a RIOT service that provide remote access/control to TP-Link Kasa HS1xx smart plug. It allows clients send http requests to get status and control the plug's on/off and led. See readme.md in the folder for more. 
 
 ## iotServerLib - .NET class library
@@ -92,9 +92,10 @@ iotServerLib implements a set of class to encapsulate hardware components connec
 ## videoStreaming - Python package
 This package supports an HTTP video streming service based on Flask. The main code is from https://blog.miguelgrinberg.com/post/video-streaming-with-flask with addition of face tracking.
 * FaceTracker - detect and track faces with input image frames
+
 videoStreaming works in either Windows and Pi:
-Windows: just run python videoStreamingService.py
-Pi: just run python3 videoStreamingService-pi.py
+* Windows: just run python videoStreamingService.py
+* Pi: just run python3 videoStreamingService-pi.py
 
 ## picarServer - - Python app
 This is the server for Adeept Mars PiCar. By leveraging the above Python packages, it supports both HTTP RIOT protocol (based on Flask) and the original Adeept TCP implementation. It also added face tracking for the video streaming.

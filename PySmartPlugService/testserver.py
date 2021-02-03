@@ -9,7 +9,7 @@ from piServices.baseRequestHandler import BaseRequestHandler
 from piServices.piUtils import timePrint
 from piServices.piSysRequestHandler import PiSysRequestHandler
 from piServices.piGpioRequestHandler import PiGpioRequestHandler
-from .kasaHs1xxRequestHandler import KasaHs1xxRequestHandler
+from kasaHs1xxRequestHandler import KasaHs1xxRequestHandler
 
 app = Flask(__name__)
 app.request_class = RequestContext
@@ -20,7 +20,7 @@ app.request_class = RequestContext
 #  node - the node id should be one of ['system', 'time', 'emeter', 'cmd']
 #  data - the data id in the node
 #  property - the name of the property
-# Examples:
+# get examples:
 #  /dev/dev01/system              get the system data from smart plug dev01
 #  /dev/dev01/time/timezone       get the timezone from smart plug dev01
 #  /dev/dev02/emeter?year=2020    get 2020 monthly statistic data from smart plug dev02
@@ -47,7 +47,8 @@ if __name__ == '__main__':
     gpioHandler = PiGpioRequestHandler(authorizationList=authorizationList)
     kasaHandler = KasaHs1xxRequestHandler(authorizationList=authorizationList)
     # add smart plug to kasaHandler
-    kasaHandler.addSmartPlug('sp01', '192.168.3.85')
+    kasaHandler.addSmartPlug('plug01', '192.168.1.85')
+    kasaHandler.addSmartPlug('plug02', '192.168.1.86')
 
     try:
         app.run(host='0.0.0.0', port=port, debug = True, threaded=True, use_reloader=True)

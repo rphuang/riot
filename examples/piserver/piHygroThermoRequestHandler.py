@@ -20,7 +20,7 @@ class PiHygroThermoRequestHandler(BaseRequestHandler):
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
         """
-        super(PiHygroThermoRequestHandler, self).__init__(name=name, rootPaths=rootPaths, authorizationList=authorizationList)
+        super(PiHygroThermoRequestHandler, self).__init__(name=name, type='HygroThermoSensor', rootPaths=rootPaths, authorizationList=authorizationList)
         self.sensor = PiHygroThermoDHT('dht', None, pin)
 
     def doGet(self, request):

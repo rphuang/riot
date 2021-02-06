@@ -43,9 +43,9 @@ if __name__ == '__main__':
 
     authorizationList = None
     # create proper RequestHandlers
-    sysHandler = PiSysRequestHandler(authorizationList=authorizationList)
-    gpioHandler = PiGpioRequestHandler(authorizationList=authorizationList)
-    kasaHandler = KasaHs1xxRequestHandler(authorizationList=authorizationList)
+    sysHandler = PiSysRequestHandler(name='PiServerSystem', authorizationList=authorizationList)
+    gpioHandler = PiGpioRequestHandler(name='PiServerGpio', authorizationList=authorizationList)
+    kasaHandler = KasaHs1xxRequestHandler(name='PiServerSmartPlugs', authorizationList=authorizationList)
     # add smart plug to kasaHandler
     kasaHandler.addSmartPlug('plug01', '192.168.1.85')
     kasaHandler.addSmartPlug('plug02', '192.168.1.86')

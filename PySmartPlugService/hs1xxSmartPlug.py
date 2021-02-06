@@ -28,7 +28,7 @@ class Hs1xxSmartPlug():
         returns a tuple (statusCode, dict) where the dict contains response or data items
         """
         nodeLowercase = node.lower()
-        if nodeLowercase == 'system':
+        if len(nodeLowercase) == 0 or nodeLowercase == 'system':
             sysinfo = self.smartPlug.command(('system', 'get_sysinfo'))
             if len(dataId) == 0:
                 return (200, sysinfo)

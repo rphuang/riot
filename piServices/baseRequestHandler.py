@@ -14,13 +14,16 @@ class BaseRequestHandler(object):
     _handlers = {}
     _lock = RLock()
 
-    def __init__(self, name, rootPaths, authorizationList=None):
+    def __init__(self, name, type, rootPaths, authorizationList=None):
         """ constructor for BaseRequestHandler 
         name: the name for the handler
+        type: the type of the handler
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
         """
         self.name = name
+        self.type = type
+        self.rootPaths = rootPaths
         if authorizationList == None or len(authorizationList) == 0:
             self.authorizationList = None
         else:
@@ -78,6 +81,12 @@ class BaseRequestHandler(object):
         else:
             return False
 
+    def endpoints(self, key, hostUrl):
+        """ get available endpoints from this handler """
+        items = []
+        items.append({'name': self.name, 'path': key, 'type': self.type, 'url': hostUrl + key})
+        return items
+
     @classmethod
     def processRequest(cls, request):
         """ process a request by finding the request handler """
@@ -109,7 +118,9 @@ class BaseRequestHandler(object):
             result = []
             for key in BaseRequestHandler._handlers:
                 handler = BaseRequestHandler._handlers[key]
-                result.append({'name': handler.name, 'path': key, 'url': request.host_url + key})
+                #result.append({'name': handler.name, 'path': key, 'url': request.host_url + key})
+                for item in handler.endpoints(key, request.host_url):
+                    result.append(item)
             response = makeJsonResponse(200, result)
         else:
             timePrint('%s %s client: %s handler: N.A.' %(method, request.url, request.remote_addr))

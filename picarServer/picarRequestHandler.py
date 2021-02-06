@@ -17,7 +17,7 @@ class PiCarRequestHandler(BaseRequestHandler):
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
         """
-        super(PiCarRequestHandler, self).__init__(name=name, rootPaths=rootPaths, authorizationList=authorizationList)
+        super(PiCarRequestHandler, self).__init__(name=name, type='PiCar', rootPaths=rootPaths, authorizationList=authorizationList)
         self.commandHandler = commandHandler
 
     def doGet(self, request):

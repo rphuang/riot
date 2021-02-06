@@ -59,9 +59,9 @@ if __name__ == '__main__':
 
         authorizationList = picarConfig.getOrAdd('PiCar.AuthorizationList', '')
         # create proper RequestHandlers
-        sysHandler = PiSysRequestHandler(authorizationList=authorizationList)
-        gpioHandler = PiGpioRequestHandler(authorizationList=authorizationList)
-        picarHandler = PiCarRequestHandler(commandHandler, authorizationList=authorizationList)
+        sysHandler = PiSysRequestHandler(name='PiCarSystem', authorizationList=authorizationList)
+        gpioHandler = PiGpioRequestHandler(name='PiCarGpio', authorizationList=authorizationList)
+        picarHandler = PiCarRequestHandler(commandHandler, name='PiCar', authorizationList=authorizationList)
 
         app.run(host='0.0.0.0', port=httpPort, debug=True, threaded=True, use_reloader=False)
 

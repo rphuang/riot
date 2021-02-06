@@ -29,7 +29,7 @@ class KasaHs1xxRequestHandler(BaseRequestHandler):
         . rootPaths: list of root paths that will be handled by the instance
         . authorizationList: a list of strings for authorized users
         """
-        super(KasaHs1xxRequestHandler, self).__init__(name=name, rootPaths=rootPaths, authorizationList=authorizationList)
+        super(KasaHs1xxRequestHandler, self).__init__(name=name, type='KasaSmartPlug', rootPaths=rootPaths, authorizationList=authorizationList)
         self.deviceIds = []
         self.deviceList = {}
 
@@ -48,7 +48,7 @@ class KasaHs1xxRequestHandler(BaseRequestHandler):
         """
         deviceId = request.paths[1]
         if len(deviceId) == 0:
-            return makeJsonResponse(400, { KeyResponse: 'MissingSmartDeviceId' })
+            return makeJsonResponse(200, self.endpoints(self.rootPaths[0], request.host_url))
 
         httpStatusCode = 200
         device = self.deviceList[deviceId]
@@ -80,5 +80,17 @@ class KasaHs1xxRequestHandler(BaseRequestHandler):
         dataId = request.paths[3]
         httpStatusCode, response = device.post(node, dataId, request.json)
         return makeJsonResponse(httpStatusCode, response)
+
+    def endpoints(self, key, hostUrl):
+        """ get available endpoints from this handler """
+        #items = super(KasaHs1xxRequestHandler, self).endpoints(key=key, hosturl=hosturl)
+        items = []
+        items.append({'name': self.name, 'path': key, 'type': self.type, 'url': hostUrl + key})
+        for devKey in self.deviceList:
+            device = self.deviceList[devKey]
+            devicePath = key + '/' + device.id
+            items.append({'name': device.id, 'path': devicePath, 'type': 'KasaHS1xx', 'parent': key, 'url': hostUrl + devicePath})
+        return items
+
 
 

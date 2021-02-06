@@ -19,7 +19,7 @@ class PiSysRequestHandler(BaseRequestHandler):
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
         """
-        super(PiSysRequestHandler, self).__init__(name=name, rootPaths=rootPaths, authorizationList=authorizationList)
+        super(PiSysRequestHandler, self).__init__(name=name, type='PiSystem', rootPaths=rootPaths, authorizationList=authorizationList)
         self._startUp()
 
     def doGet(self, request):

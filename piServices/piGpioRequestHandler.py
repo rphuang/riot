@@ -16,7 +16,7 @@ class PiGpioRequestHandler(BaseRequestHandler):
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
         """
-        super(PiGpioRequestHandler, self).__init__(name, rootPaths=rootPaths, authorizationList=authorizationList)
+        super(PiGpioRequestHandler, self).__init__(name, type='PiGpio', rootPaths=rootPaths, authorizationList=authorizationList)
         piGpio.setup()
 
     def doGet(self, request):

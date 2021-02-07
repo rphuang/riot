@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "pi": {
+      "commandName": "Project",
+      "commandLineArgs": "-a guest: 192.168.0.121:8688/dev/sp01"
+    }
+  }
+}

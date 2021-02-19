@@ -1,6 +1,7 @@
 import cv2
 import dlib
 import time
+from piServices.piUtils import timePrint
 
 class FaceTracker():
     """ detect & track faces in sequence of images in bgr format (cv2 format)
@@ -52,7 +53,7 @@ class FaceTracker():
         for fid in self.trackedFaces.keys():
             trackingQuality = self.trackedFaces[fid].update(img)
             if trackingQuality < self.trackQualityLowBar:
-                print("Removing ID " + str(fid) + ' quality: ' + str(trackingQuality))
+                timePrint("Removing face ID " + str(fid) + ' quality: ' + str(trackingQuality))
                 fidsToDelete.append(fid)
 
         for fid in fidsToDelete:
@@ -61,8 +62,8 @@ class FaceTracker():
         # determine whether to run face detection
         if (self.frameCounter % self.framesForDetection) == 0:
             faces = self.detectFaces(img)
-            if self.debugMode and len(faces) != len(self.trackedFaces):
-                print('Found faces: ' + str(len(faces)) + ' Tracking faces: ' + str(len(self.trackedFaces)))
+            #if self.debugMode and len(faces) != len(self.trackedFaces):
+                #timePrint('Found faces: ' + str(len(faces)) + ' Tracking faces: ' + str(len(self.trackedFaces)))
 
             for (_x,_y,_w,_h) in faces:
                 # convert to int since dlib requires numpy.int32
@@ -92,7 +93,7 @@ class FaceTracker():
                         matchedFid = fid
 
                 if matchedFid is None:
-                    print("Creating new ID " + str(self.nextFaceID))
+                    timePrint("Creating new face ID " + str(self.nextFaceID))
                     # create and store the tracker 
                     tracker = dlib.correlation_tracker()
                     pad = self.trackOffset

@@ -22,6 +22,35 @@ namespace Riot.SmartPlug.Client
         public KasaHs1xxSystemData SystemData { get; private set; }
 
         /// <summary>
+        /// turn the smart plug on or off
+        /// </summary>
+        public string TurnPlugOnOff(bool on)
+        {
+            string json = string.Format("{{\"relay_state\": {0}}}", on? 1 : 0);
+            return Post(json);
+        }
+
+        /// <summary>
+        /// set the LED off status - true: LED always off
+        /// </summary>
+        public string SetLedAlwaysOff(bool on)
+        {
+            string json = string.Format("{{\"led_off\": {0}}}", on ? 1 : 0);
+            return Post(json);
+        }
+
+        /// <summary>
+        /// post/put data to the server
+        /// </summary>
+        /// <returns>response from server</returns>
+        public string Post(string json)
+        {
+            //string json = string.Format("{{\"cmd\": \"{0}\"}}", command);
+            string msg = Client.Post(FullPath, json);
+            return msg;
+        }
+
+        /// <summary>
         /// process the response from server and update the properties
         /// </summary>
         protected override bool ProcessResponse(HttpResponse response)

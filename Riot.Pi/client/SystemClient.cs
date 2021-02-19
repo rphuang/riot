@@ -11,8 +11,8 @@ namespace Riot.Pi.Client
         /// <summary>
         /// constructor
         /// </summary>
-        public SystemClient(string path, IotHttpClient client, IotNode parent)
-            : base(path, client, parent)
+        public SystemClient(string id, IotHttpClient client, IotNode parent)
+            : base(id, client, parent)
         {
             CpuClient = new CpuClient("cpu", Client, this);
             Children.Add(CpuClient);

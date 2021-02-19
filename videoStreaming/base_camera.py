@@ -7,7 +7,7 @@ except ImportError:
         from thread import get_ident
     except ImportError:
         from _thread import get_ident
-
+from piServices.piUtils import timePrint
 
 class CameraEvent(object):
     """An Event-like class that signals all active clients when a new frame is available."""
@@ -21,7 +21,7 @@ class CameraEvent(object):
             # this is a new client
             # add an entry for it in the self.events dict
             # each entry has two elements, a threading.Event() and a timestamp
-            print('add event with thread id: %s' % ident)
+            timePrint('add camera event with thread id: %s' % ident)
             self.events[ident] = [threading.Event(), time.time()]
         return self.events[ident][0].wait()
 
@@ -43,7 +43,7 @@ class CameraEvent(object):
                 if now - event[1] > 5:
                     remove = ident
         if remove:
-            print('remove event with thread id: %s' % remove)
+            timePrint('remove camera event with thread id: %s' % remove)
             del self.events[remove]
 
     def clear(self):
@@ -121,7 +121,7 @@ class BaseCamera(object):
     @classmethod
     def _thread(cls):
         """Camera background thread."""
-        print('Starting camera thread.')
+        timePrint('Starting camera thread %s' % get_ident())
         frames_iterator = cls.frames()
         for frame in frames_iterator:
             BaseCamera.frame = frame
@@ -136,7 +136,7 @@ class BaseCamera(object):
             # the last 10 seconds then stop the thread
             if time.time() - BaseCamera.last_access > 10:
                 frames_iterator.close()
-                print('Stopping camera thread due to inactivity.')
+                timePrint('Stopping camera thread due to inactivity %s' % get_ident())
                 break
         BaseCamera.thread = None
         BaseCamera.faceTracker = None

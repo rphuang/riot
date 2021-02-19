@@ -146,8 +146,8 @@ namespace pi
             }
 
             HttpResponse response = rootNode.GetResponse(path);
-            if (response.Success) LogUtil.WritePassed($"Server {server} response for endpoint {path}:\n{response.Result}");
-            else Console.WriteLine($"Error from Server {server} response for endpoint {path}:\n{response.Result}\n{response.ErrorMessage}");
+            if (response.Success) LogUtil.WritePassed("Server {0} response for endpoint {1}:\n{2}", server, path, response.Result);
+            else Console.WriteLine("Error from Server {0} response for endpoint {1}:\n{2}\n{3}", server, path, response.Result, response.ErrorMessage);
         }
 
         static void TestAllEndpoints(string server, string credential)

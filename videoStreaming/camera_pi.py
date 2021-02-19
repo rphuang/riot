@@ -3,7 +3,7 @@ import time
 import picamera
 from picamera.array import PiRGBArray
 from videoStreaming.base_camera import BaseCamera
-
+from piServices.piUtils import timePrint
 
 class Camera(BaseCamera):
     width = 1280
@@ -19,7 +19,7 @@ class Camera(BaseCamera):
                 self.cameraReady = True
                 super(Camera, self).__init__()
         except:
-            print("Failed to initialize picamera")
+            timePrint("Failed to initialize picamera")
 
     @staticmethod
     def frames():

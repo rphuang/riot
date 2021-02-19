@@ -28,8 +28,8 @@ horizontalServo.max,670
 horizontalServo.minAngle,60
 horizontalServo.maxAngle,-120
 horizontalServo.centerAngle,0
-camera.width,640
-camera.height,480
+camera.width,320
+camera.height,240
 camera.enableFaceTracking,true
 camera.classifier,/home/pi/src/picarServer/data/haarcascade_frontalface_alt.xml
 stripLed.ledCount,12

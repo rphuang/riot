@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -38,10 +39,56 @@ namespace Riot.SmartPlug.Client
         public KasaHs1xxEmeterClient Emeter { get; private set; }
 
         /// <summary>
+        /// turn the device on or off
+        /// </summary>
+        public string TurnPlugOnOff(bool on)
+        {
+            return System.TurnPlugOnOff(on);
+        }
+
+        /// <summary>
+        /// set the LED off status - true: LED always off
+        /// </summary>
+        public string SetLedAlwaysOff(bool on)
+        {
+            return System.SetLedAlwaysOff(on);
+        }
+
+        /// <summary>
+        /// send command to reboot the device
+        /// </summary>
+        public string Reboot(int delay)
+        {
+            return PostCommand("reboot", delay);
+        }
+
+        /// <summary>
+        /// send command to reset the device
+        /// </summary>
+        public string Reset(int delay)
+        {
+            return PostCommand("reset", delay);
+        }
+
+        /// <summary>
+        /// execute system command on the server
+        /// </summary>
+        /// <returns>response from server</returns>
+        public string PostCommand(string command, int delay)
+        {
+            string json = string.Format("{{\"delay\": {0}}}", delay);
+            string msg = Client.Post($"{FullPath}/cmd/{command}", json);
+            return msg;
+        }
+
+        /// <summary>
         /// process the response from server and update the properties
         /// </summary>
         protected override bool ProcessResponse(HttpResponse response)
         {
+            string json = response.Result;
+            // deserialize
+            System.ReplaceData(JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json));
             return true;
         }
     }

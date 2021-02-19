@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Riot.Client;
+using System;
 using System.Collections.Generic;
 
 namespace Riot.Pi.Client
@@ -15,7 +16,7 @@ namespace Riot.Pi.Client
         /// <returns>returns the root client node that may contain all the child nodes</returns>
         protected override IotClientNode CreateClientNode(IList<HttpEndpoint> endpoints, IotHttpClient client)
         {
-            PiClient root = new PiClient(client);
+            IotGenericClient root = new IotGenericClient(client);
             foreach (HttpEndpoint endpoint in endpoints)
             {
                 if (string.Equals("PiSystem", endpoint.Type, StringComparison.OrdinalIgnoreCase))
@@ -25,8 +26,8 @@ namespace Riot.Pi.Client
                 }
                 else if (string.Equals("PiGpio", endpoint.Type, StringComparison.OrdinalIgnoreCase))
                 {
-                    GpioClient sys = new GpioClient(endpoint.Path, client, null);
-                    root.AddNode(sys);
+                    GpioClient gpio = new GpioClient(endpoint.Path, client, null);
+                    root.AddNode(gpio);
                 }
             }
             if (root.Children.Count > 0) return root;

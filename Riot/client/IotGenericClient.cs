@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Riot.Pi.Client
+namespace Riot.Client
 {
     /// <summary>
-    /// implement a container for all nodes for a pi
+    /// implement a generic container for other client nodes
     /// </summary>
-    public class PiClient : IotClientNode
+    public class IotGenericClient : IotClientNode
     {
         /// <summary>
         /// constructor with server:port and user:password
         /// </summary>
-        public PiClient(IotHttpClient client) : base(string.Empty, client, null)
+        public IotGenericClient(IotHttpClient client) : base(string.Empty, client, null)
         { }
 
         /// <summary>
         /// constructor with server:port and user:password
         /// </summary>
-        public PiClient(string server, string credential) : base(string.Empty, null, null)
+        public IotGenericClient(string server, string credential) : base(string.Empty, null, null)
         {
             Client = new IotHttpClient(server, credential);
         }

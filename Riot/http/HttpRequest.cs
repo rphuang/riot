@@ -15,6 +15,11 @@ namespace Riot
         public bool ParseJsonToReturnFirstValue { get; set; } = false;
 
         /// <summary>
+        /// the timeout for request in millisecond
+        /// </summary>
+        public int RequestTimeout { get; set; } = 10000;
+
+        /// <summary>
         /// Get result from specified url
         /// </summary>
         /// <param name="id">The url to request</param>
@@ -44,6 +49,7 @@ namespace Riot
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "GET";
             httpWebRequest.KeepAlive = keepAlive;
+            httpWebRequest.Timeout = RequestTimeout;
             //LogUtil.WriteInfo("Requesting Url: {0}", url);
             if (requestHeaderParams != null)
             {

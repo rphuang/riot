@@ -19,5 +19,15 @@ namespace SettingsLib
         /// the settings inside the group
         /// </summary>
         public IDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// set a setting
+        /// </summary>
+        public void SetSetting(string name, object value)
+        {
+            string strValue = value?.ToString();
+            if (Settings.ContainsKey(name)) Settings[name] = strValue;
+            else Settings.Add(name, strValue);
+        }
     }
 }

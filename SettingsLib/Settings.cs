@@ -133,7 +133,7 @@ namespace SettingsLib
                         writer.WriteLine("Group={0}", group.Id);
                         foreach (var item in group.Settings)
                         {
-                            writer.WriteLine("{0}={1}", item.Key, item.Value);
+                            writer.WriteLine("    {0}={1}", item.Key, item.Value);
                         }
                         writer.WriteLine("EndGroup={0}", group.Id);
                     }
@@ -172,7 +172,7 @@ namespace SettingsLib
                 using (TextReader reader = File.OpenText(SettingsFile))
                 {
                     string groupName = string.Empty;
-                    SettingGroup groupDict = null;
+                    SettingGroup group = null;
                     string buffer;
                     while ((buffer = reader.ReadLine()) != null)
                     {
@@ -187,14 +187,16 @@ namespace SettingsLib
                             if (string.Equals("group", key, StringComparison.OrdinalIgnoreCase))
                             {
                                 groupName = value;
-                                groupDict = new SettingGroup() { Id = value };
-                                GroupsDictionary.Add(value, groupDict);
-                                SetSetting(groupName + ".Id", value);       // adding ID to global dictionary
+                                group = new SettingGroup() { Id = value };
+                                GroupsDictionary.Add(value, group);
+                                // adding ID to both dictionaries
+                                group.SetSetting("Id", value);
+                                SetSetting(groupName + ".Id", value);
                             }
                             else if (string.Equals("endgroup", key, StringComparison.OrdinalIgnoreCase))
                             {
                                 groupName = string.Empty;
-                                groupDict = null;
+                                group = null;
                             }
                             else
                             {
@@ -203,7 +205,7 @@ namespace SettingsLib
                                 {
                                     string fullName = groupName + "." + key;
                                     SetSetting(fullName, value);
-                                    groupDict.Settings.Add(key, value);
+                                    group.SetSetting(key, value);
                                 }
                             }
                         }

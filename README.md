@@ -28,16 +28,27 @@ The followings are in the repository.
 ```
         python3 path-to-installed-folder/picarServer/server.py path-to-installed-folder/picarServer/picarconfig.txt
 ```
-4. Configure PiCar Android client
-    1. grant storage permission for PiCar.Android app after deploy to device
-    2. goto Settings - edit Server (address:port) and Credential (user:password) fields
-    3. click Save
-    4. close & restart
-
-5. Install smart plug RIOT service (see readme.md in the folder for more)
+4. Install smart plug RIOT service (see readme.md in the folder for more)
     1. copy this folder pySmartPlugService to the Raspberry Pi
     2. install from https://github.com/vrachieru/tplink-smartplug-api. Alternatively, just download the code and copy the api.py to above folder and rename to tplink_smartplug.py
     
+5. Setup RiotDevices Android app
+    1. Build and deploy to Android phone with VS
+    2. Grant storage permission for the Devices.Android app
+    3. Re-launch the Devices app
+    4. Set the Pi Server IP address and password.
+        1. goto "Pi Server". There would be an error message after timeout.
+        2. click "Edit" then update the server Address (address:port) and Credential (user:password) fields
+        3. click Save. This would create a devicessettings.txt file under docs folder.
+        4. close & restart the app
+    5. Setup the Pi Car server address and password following the same steps as above except by go to "Pi Car".
+    6. Configure the PiCar settings through the "Settings"
+        * Motor Speed: the speed of the motor (0 to 100)
+        * Steering Angle: the angle for left/right steering servo (0 to 90)
+        * Delta Camera Angle: the delta angle to increment when holding the head's right/left/top/down buttons
+        * Config distance scan with start/end angle position and angle increment
+    7. Config smart plug by following the same steps as 4.
+
 # Coming 
 * ServiceStack based HTTP server for RIOT that supports connected Arduino devices with REST-ish non-HTTP communication.
 
@@ -54,7 +65,7 @@ The url path is the unique identification to the target.
 * Scheme: http (will support https in the future)
 * Host: the server’s IP address or name and corresponding port specification
 * Root: the root path. In the Python RequestHandler, the root path is used to determine the instance of handler.
-* Device: the device ID or the path to the device if it is different than the root. In general, that means the /<root>/<device> determines where the device is.
+* Device: the device ID or the path to the device if it is different than the root. In general, the /<root>/<device> determines where the device is.
 * [Optional] node: the node ID or the path to the node separated with ‘/’ if it contains multiple layers.
 * [Optional] data: the data to get/post. the data is depended on the service.
 
@@ -111,27 +122,39 @@ This is the server for Adeept Mars PiCar. By leveraging the above Python package
 * Config - simple csv based configuration 
 * server - the server module that loads configuration and starts all necessary threads for the picar
 
-## IotClientLib - .NET class library
-This is a C# client lib that can be used to build client app to control/communicate RIOT HTTP based server. It provides reusable building blocks and a standard interface that hides the details of the hardware. Initial version supports the components of Adeept Mars PiCar.
-The lib has two parts - one set of interfaces for each component and a second set of concrete classes that implement those interfaces.
-* HttpNode - the base class for all http implementation. As the base node for composite pattern, the base encapsulates both leaf and composite nodes.
-* HttpMotor - represent a motor
-* HttpServo - represent a servo
-* HttpUltrasonic - represent an ultrasonic sensor
-* HttpRGBLed - represent an RGB LED
-* HttpStripLed - represent a strip LED
-* HttpGpio - represent the GPIO on a Raspberry Pi that contains HttpGpioPins
-* HttpGpioPin - represent a GPIO pin on Raspberry Pi
-* HttpSystem - represent a server system that contains CPU & Memory
-* HttpCpu - CPU information on the server
-* HttpMemory - memory information on the server
+## Rito and Riot.* - .NET class libraries for Riot
+This is a set of C# libraries that can be used to build server and client app to control/communicate via RIOT HTTP protocol.
+It provides reusable building blocks and a standard interfaces that hides the details of the hardware.
+### Riot
+This project defines all the base interfaces and classes for RIOT. Riot uses composite pattern to form the base interfaces and classes.
+Refer to other projects to use and extend the base classes.
 
-## PiCar - Android App
-The PiCar Android App is built with the IotClientLib and Xamarin Forms. It should be relative easy to make it work on iOS.
-* Control Adeept Mars PiCar via HTTP
-* Video streaming via HTTP. Known Issue: video doesn't fit the screen.
-* Display server CPU memory information
-* Shutdown/reboot and user commands
+### Riot.IoDevice
+The library implements RIOT clients for some IO devices/sensors such as DC motor, servo, DHT, and ultrasonic sensors.
+
+### Riot.Pi
+The Riot.Pi wraps the Raspberry Pi's system and gpio in simple RIOT HTTP protocol. Riot.Pi contains the data and nodes for Raspberry Pi's system and gpio.
+
+### Riot.SmartPlug
+The Riot.SmartPlug implements the client to access/control smart plugs through web service using RIOT HTTP protocol.
+Currently, only the Kasa HS1xx smart plugs are supported.
+It includes followings.
+
+### RiotDevices
+The RiotDevices is a simple Android app to monitor and control the followings:
+* Monitor Raspberry Pi's CPU amd memory status. System commands, like reboot and shutdown, can also posted to the Pi.
+* View Kasa smart plugs (model HS1xx) status and control on/off of the plugs.
+* Control robotic PiCar (Adeept Mars PiCar)
+
+## RiotDevices - Android App
+The RiotDevices is a simple Android app to monitor and control devices via web service using RIOT HTTP protocol.
+The Android App is built with the Riot libraries and Xamarin Forms. It should be relative easy to make it work on iOS but had not tried on any IOS devices!!
+* Monitor Raspberry Pi's CPU amd memory status. 
+* Send system commands, like reboot and shutdown, can also posted to the Pi.
+* View Kasa smart plugs (model HS1xx) status 
+* Control on/off of the switch, reboot the plug, and set led-off status.
+* Control robotic PiCar (Adeept Mars PiCar)
+* Video streaming via HTTP.
 
 ## Examples
 * picarServer has examples for the followings:

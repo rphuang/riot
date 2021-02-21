@@ -63,15 +63,7 @@ namespace EntityLib
                 {
                     try
                     {
-                        if (typeof(T).IsAssignableFrom(value.GetType()))
-                        {
-                            return (T)value;
-                        }
-                        else
-                        {
-                            string msg = string.Format("Unable to Convert '{0}' to type '{1}'.", value, typeof(T));
-                            throw new Exception(msg);
-                        }
+                        return (T)Convert.ChangeType(value, typeof(T));
                     }
                     catch (InvalidCastException ex)
                     {

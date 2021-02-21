@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Devices.Views.PiCommandPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Exit" Clicked="ExitPiCommand_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Padding="8">
+            <Button Text="Shutdown" Clicked="ShutdownButton_Clicked" />
+            <Button Text="Reboot" Clicked="RebootButton_Clicked" />
+            <Button Text="Command" Clicked="CommandButton_Clicked" />
+            <Entry x:Name="commandEntry" Placeholder="Enter command" WidthRequest="40" />
+            <Label Text="" FontSize="Medium" />
+            <Label x:Name="commandResponse" Text="" WidthRequest="40" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

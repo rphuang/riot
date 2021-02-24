@@ -90,7 +90,7 @@ namespace Devices.Views
 
             if (_piSystem == null)
             {
-                AddLabel($"Service {_monitorTopic.Name} is not available.", gridList, rowIndex++, 0, 5);
+                AddLabel($"Service {_monitorTopic.Name} is not available at {_monitorTopic.Server}.", gridList, rowIndex++, 0, 5);
                 AbortRefresh();
                 return;
             }
@@ -98,7 +98,7 @@ namespace Devices.Views
             HttpResponse response = _piSystem.CpuClient.GetResponse();
             if (!response.Success)
             {
-                AddLabel($"Error getting data for {_monitorTopic.Name}", gridList, rowIndex++, 0);
+                AddLabel($"Error getting data for {_monitorTopic.Name} at {_monitorTopic.Server}", gridList, rowIndex++, 0, 5);
                 GridUtil.AddLabel(response.ErrorMessage, gridList, rowIndex++, 0, 5, 10, Color.Default, false, LayoutOptions.End);
                 StopRefresh();
                 return;

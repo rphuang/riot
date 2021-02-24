@@ -4,7 +4,7 @@
 
 import os
 import threading
-
+import tempfile
 from piServices.piConstants import *
 from piServices.piUtils import timePrint
 from piServices.piStats import PiStats
@@ -53,9 +53,19 @@ class PiSysRequestHandler(BaseRequestHandler):
         httpStatusCode = 200
         for key, value in bodyJson.items():
             try:
-                os.system(value + "\n")
+                timePrint('POST system command: %s=%s' %(key, value))
+                # use tempfile for output
+                tempFile = tempfile.NamedTemporaryFile(prefix='pisys-')
+                tempFileName = tempFile.name
+                tempFile.close()
+                command = '%s > %s 2>&1 \n' %(value, tempFileName)
+                os.system(command)
+                f = open(tempFileName, "r")
+                text = f.read()
+                f.close()
+                os.remove(tempFileName)
                 itemStatusCode = 200
-                itemResponse = { KeyPropertyKey: key, KeyPropertyValue: value }
+                itemResponse = { key: value, 'result': text }
             except:
                 itemStatusCode = 400
                 itemResponse = { KeyResponse: 'InvalidCommand', KeyPropertyValue: value }

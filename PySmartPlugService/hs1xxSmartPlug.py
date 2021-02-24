@@ -27,10 +27,12 @@ class Hs1xxSmartPlug():
         . dict args: key-value for get emeter
         returns a tuple (statusCode, dict) where the dict contains response or data items
         """
+        sysinfo = {}
         nodeLowercase = node.lower()
         if len(nodeLowercase) == 0 or nodeLowercase == 'system':
             sysinfo = self.smartPlug.command(('system', 'get_sysinfo'))
             if len(dataId) == 0:
+                sysinfo['ipaddress'] = self.smartPlug.host + ':' + str(self.smartPlug.port)
                 return (200, sysinfo)
             if dataId.lower() in sysinfo:
                 return (200, {dataId: sysinfo[dataId]})

@@ -70,7 +70,7 @@ namespace Devices.Views
 
             if (_hs1xxClient == null)
             {
-                AddLabel($"Smart Plug {_DeviceTopic.Name} is not available.", gridList, rowIndex++, 0, 2);
+                AddLabel($"Smart Plug {_DeviceTopic.Name} is not available at {_DeviceTopic.Server}.", gridList, rowIndex++, 0, 2);
                 _initialized = false;
                 return;
             }
@@ -78,7 +78,7 @@ namespace Devices.Views
             HttpResponse response = _hs1xxClient.System.GetResponse();
             if (!response.Success)
             {
-                AddLabel($"Error getting data for {_DeviceTopic.Name}", gridList, rowIndex++, 0);
+                AddLabel($"Error getting data for {_DeviceTopic.Name} at {_DeviceTopic.Server}", gridList, rowIndex++, 0, 2);
                 GridUtil.AddLabel(response.ErrorMessage, gridList, rowIndex++, 0, 2, 10, Color.Default, false, LayoutOptions.End);
                 return;
             }
@@ -92,6 +92,7 @@ namespace Devices.Views
             if (systemData.Led_off == 0) LedOffToolbarItem.Text = "LedOff";
             else LedOffToolbarItem.Text = "LedOn";
 
+            DisplayHeaderAndValueRow("IP Address", systemData.Ipaddress, gridList, rowIndex++);
             DisplayHeaderAndValueRow("Alias", systemData.Alias, gridList, rowIndex++);
             DisplayHeaderAndValueRow("Time", timeData.Time, gridList, rowIndex++);
             DisplayHeaderAndValueRow("Relay State", systemData.Relay_state == 1 ? "On" : "Off", gridList, rowIndex++);

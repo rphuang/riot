@@ -6,6 +6,11 @@
     public class KasaHs1xxSystemData : IotData
     {
         /// <summary>
+        /// the device IP Address (server:port) 
+        /// </summary>
+        public string Ipaddress { get; set; }
+
+        /// <summary>
         /// the device ID 
         /// </summary>
         public string DeviceId { get; set; }

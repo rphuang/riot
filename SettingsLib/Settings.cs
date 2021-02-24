@@ -50,14 +50,14 @@ namespace SettingsLib
         }
 
         /// <summary>
-        /// try get a setting group by name
+        /// try get a setting group by ID
         /// </summary>
-        /// <param name="name">the name of the setting group</param>
+        /// <param name="id">the ID of the setting group</param>
         /// <param name="groupSetting">the out setting group</param>
         /// <returns>returns true if exists</returns>
-        public bool TryGetSettingGroup(string name, out SettingGroup settingGroup)
+        public bool TryGetSettingGroup(string id, out SettingGroup settingGroup)
         {
-            return GroupsDictionary.TryGetValue(name, out settingGroup);
+            return GroupsDictionary.TryGetValue(id, out settingGroup);
         }
 
         /// <summary>

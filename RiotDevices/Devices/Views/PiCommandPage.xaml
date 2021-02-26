@@ -5,24 +5,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="Devices.Views.PiCommandPage">
+    <ContentPage.Resources>
+        <Style TargetType="Button"
+               ApplyToDerivedTypes="True"
+               CanCascade="True">
+            <Setter Property="FontSize" Value="Small" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="BorderRadius" Value="2" />
+            <Setter Property="WidthRequest" Value="320" />
+        </Style>
+    </ContentPage.Resources>
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Exit" Clicked="ExitPiCommand_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="8">
-                <Grid>
+                <Grid x:Name="CommandsGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Row="0" Grid.Column="0" Text="Shutdown" Clicked="ShutdownButton_Clicked" />
-                    <Button Grid.Row="0" Grid.Column="1" Text="Reboot" Clicked="RebootButton_Clicked" />
-                    <Button Grid.Row="1" Grid.Column="0" Text="Grep syslog" Clicked="GrepSyslogButton_Clicked" />
-                    <Button Grid.Row="1" Grid.Column="1" Text="Systemctl Restart" Clicked="RestartButton_Clicked" />
-                    <Button Grid.Row="2" Grid.Column="0" Text="Command 1" Clicked="Command1Button_Clicked" x:Name="Command1Button" />
-                    <Button Grid.Row="2" Grid.Column="1" Text="Command 2" Clicked="Command2Button_Clicked" x:Name="Command2Button" />
-                    <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Custom Command" Clicked="CommandButton_Clicked" />
                 </Grid>
                 <Label x:Name="commandResponse" Text="" WidthRequest="40" />
             </StackLayout>

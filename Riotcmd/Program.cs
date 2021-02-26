@@ -158,6 +158,12 @@ namespace pi
 
             // discover server endpoints and create client nodes
             IotClientNode rootNode = IotClientFactory.Discover(server, credential);
+            if (rootNode?.Children.Count <= 0)
+            {
+                Console.WriteLine($"Server {server} does not support REST IOT.");
+                return;
+            }
+
             foreach (IotClientNode node in rootNode.Children)
             {
                 TestNode(node);

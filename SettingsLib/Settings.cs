@@ -171,8 +171,8 @@ namespace SettingsLib
 
                 using (TextReader reader = File.OpenText(SettingsFile))
                 {
-                    string groupName = string.Empty;
-                    SettingGroup group = null;
+                    string currentGroupId = string.Empty;
+                    SettingGroup currentGroup = null;
                     string buffer;
                     while ((buffer = reader.ReadLine()) != null)
                     {
@@ -180,32 +180,35 @@ namespace SettingsLib
                         if (string.IsNullOrEmpty(buffer) || buffer.StartsWith("#")) continue;
 
                         string[] parts = buffer.Split(SettingValueDelimiter);
-                        if (parts.Length > 1)
+                        if (parts.Length > 0)
                         {
                             string key = parts[0].Trim();
-                            string value = parts[1].Trim();
+                            string value = null;
+                            if (parts.Length > 1) value = parts[1].Trim();
                             if (string.Equals("group", key, StringComparison.OrdinalIgnoreCase))
                             {
-                                groupName = value;
-                                group = new SettingGroup() { Id = value };
-                                GroupsDictionary.Add(value, group);
+                                // assign a GUID as group ID
+                                if (string.IsNullOrEmpty(value)) value = Guid.NewGuid().ToString();
+                                currentGroupId = value;
+                                currentGroup = new SettingGroup() { Id = value };
+                                GroupsDictionary.Add(value, currentGroup);
                                 // adding ID to both dictionaries
-                                group.SetSetting("Id", value);
-                                SetSetting(groupName + ".Id", value);
+                                currentGroup.SetSetting("Id", value);
+                                SetSetting(currentGroupId + ".Id", value);
                             }
                             else if (string.Equals("endgroup", key, StringComparison.OrdinalIgnoreCase))
                             {
-                                groupName = string.Empty;
-                                group = null;
+                                currentGroupId = null;
+                                currentGroup = null;
                             }
                             else
                             {
-                                if (string.IsNullOrEmpty(groupName)) SetSetting(key, value);
+                                if (string.IsNullOrEmpty(currentGroupId)) SetSetting(key, value);
                                 else
                                 {
-                                    string fullName = groupName + "." + key;
+                                    string fullName = currentGroupId + "." + key;
                                     SetSetting(fullName, value);
-                                    group.SetSetting(key, value);
+                                    currentGroup.SetSetting(key, value);
                                 }
                             }
                         }

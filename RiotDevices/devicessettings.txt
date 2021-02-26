@@ -37,15 +37,34 @@ Group=Pi Car Control
   VideoPort = 5678
   GpioPinGroup = PiCarGpio
 EndGroup=Pi Car Control
-Group=PiCommand1
+Group
+  Type = PiCommand
+  Name = Shutdown
+  Command = sleep 1; sudo shutdown -h 0
+  Confirm = yes
+Group
+  Type = PiCommand
+  Name = Reboot
+  Command = sleep 1; sudo reboot
+  Confirm = yes
+Group
+  Type = PiCommand
+  Name = grep syslog
+  Command = grep {grep  /var/log/syslog, Enter the string to search.} /var/log/syslog
+Group
+  Type = PiCommand
+  Name = systemctl restart
+  Command = sudo systemctl restart {systemctl restart, Enter the service to restart.}
+Group
   Type = PiCommand
   Name = File System (df)
   Command = df -m
-Group=PiCommand2
+Group
   Type = PiCommand
-  Name = Kernel Buffer (dmesg)
-  Command = dmesg -T
-EndGroup=PiCommand2
+  Name = Custom Command
+  Command = {Custom Command, Enter the command to execute.}
+EndGroup
+
 MotorSpeed=90
 MonitorRefreshRate=1.1
 SteeringAngle=40

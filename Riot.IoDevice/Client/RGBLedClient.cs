@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.IoDevice.Client
 {
@@ -23,10 +24,10 @@ namespace Riot.IoDevice.Client
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             RGBLedData = data as RGBLedData;
-            base.ReplaceData(RGBLedData);
+            base.UpsertData(RGBLedData);
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<RGBLedData>(json));
+            UpsertData(JsonConvert.DeserializeObject<RGBLedData>(json));
             return true;
         }
 

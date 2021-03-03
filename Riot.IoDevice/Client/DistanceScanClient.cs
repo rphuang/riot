@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HttpLib;
+using Newtonsoft.Json;
 using System;
 
 namespace Riot.IoDevice.Client
@@ -28,17 +29,17 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<DistanceScanData>(json));
+            UpsertData(JsonConvert.DeserializeObject<DistanceScanData>(json));
             return true;
         }
 
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             DistanceScanData = data as DistanceScanData;
-            base.ReplaceData(DistanceScanData);
+            base.UpsertData(DistanceScanData);
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace Riot.IoDevice.Client
                     startHorizontal, startVertical, endHorizontal, endVertical, incHorizontal, incVertical);
                 string jsonResponse = Client.Post(FullPath, jsonBody);
                 // deserialize
-                ReplaceData(JsonConvert.DeserializeObject<DistanceScanData>(jsonResponse));
+                UpsertData(JsonConvert.DeserializeObject<DistanceScanData>(jsonResponse));
                 return jsonResponse;
             }
             catch (Exception err)

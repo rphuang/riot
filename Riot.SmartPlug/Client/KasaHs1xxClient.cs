@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.SmartPlug.Client
 {
@@ -88,7 +86,7 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            System.ReplaceData(JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json));
+            System.UpsertData(JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json));
             return true;
         }
     }

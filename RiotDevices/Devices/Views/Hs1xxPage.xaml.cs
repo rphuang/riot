@@ -1,7 +1,7 @@
 ﻿using Devices.Models;
 using Devices.Services;
 using FormsLib;
-using Riot;
+using HttpLib;
 using Riot.SmartPlug;
 using Riot.SmartPlug.Client;
 using System;

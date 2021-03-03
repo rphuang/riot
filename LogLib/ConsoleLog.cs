@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Riot
+namespace LogLib
 {
     /// <summary>
     /// default log to console
     /// </summary>
-    public class IotLog : ILog
+    public class ConsoleLog : ILog
     {
         /// <summary>
         /// Write Line

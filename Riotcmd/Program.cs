@@ -1,4 +1,6 @@
-﻿using Riot;
+﻿using HttpLib;
+using LogLib;
+using Riot;
 using Riot.Pi.Client;
 using Riot.SmartPlug.Client;
 using System;

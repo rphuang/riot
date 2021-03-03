@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.IoDevice.Client
 {
@@ -27,17 +28,17 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<UltrasonicData>(json));
+            UpsertData(JsonConvert.DeserializeObject<UltrasonicData>(json));
             return true;
         }
 
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             UltrasonicData = data as UltrasonicData;
-            base.ReplaceData(UltrasonicData);
+            base.UpsertData(UltrasonicData);
         }
 
         /// <summary>

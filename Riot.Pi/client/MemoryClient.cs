@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.Pi.Client
 {
@@ -24,10 +24,10 @@ namespace Riot.Pi.Client
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             MemoryData = data as MemoryData;
-            base.ReplaceData(MemoryData);
+            base.UpsertData(MemoryData);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Riot.Pi.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<MemoryData>(json));
+            UpsertData(JsonConvert.DeserializeObject<MemoryData>(json));
             return true;
         }
     }

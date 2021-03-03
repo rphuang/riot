@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Riot
+namespace HttpLib
 {
     /// <summary>
     /// encapsulate the response from http web request

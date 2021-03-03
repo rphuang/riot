@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.SmartPlug.Client
 {
@@ -28,17 +26,17 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<KasaHs1xxTimeData>(json));
+            UpsertData(JsonConvert.DeserializeObject<KasaHs1xxTimeData>(json));
             return true;
         }
 
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             TimeData = data as KasaHs1xxTimeData;
-            base.ReplaceData(TimeData);
+            base.UpsertData(TimeData);
         }
     }
 }

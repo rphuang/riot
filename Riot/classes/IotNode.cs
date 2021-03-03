@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Riot
 {
@@ -10,7 +11,7 @@ namespace Riot
         /// <summary>
         /// The data points of this node
         /// </summary>
-        public IList<IotData> Data { get; private set; } = new List<IotData>();
+        public IDictionary<string, IotData> Data { get; private set; } = new Dictionary<string, IotData>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// The children nodes of this node
@@ -27,21 +28,12 @@ namespace Riot
         }
 
         /// <summary>
-        /// replace the current Data list with single item
+        /// update or insert the data in Data dictionary
         /// </summary>
-        public virtual void ReplaceData(IotData data)
+        public virtual void UpsertData(IotData data)
         {
-            Data.Clear();
-            Data.Add(data);
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public virtual void ReplaceData(IList<IotData> data)
-        {
-            if (data != null) Data = data;
-            else Data.Clear();
+            if (Data.ContainsKey(data.Id)) Data[data.Id] = data;
+            else Data.Add(data.Id, data);
         }
 
         /// <summary>

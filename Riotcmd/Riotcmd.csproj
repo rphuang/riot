@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LogLib\LogLib.csproj" />
     <ProjectReference Include="..\Riot.Pi\Riot.Pi.csproj" />
     <ProjectReference Include="..\Riot.SmartPlug\Riot.SmartPlug.csproj" />
     <ProjectReference Include="..\Riot\Riot.csproj" />

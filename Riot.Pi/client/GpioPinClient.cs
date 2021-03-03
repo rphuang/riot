@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.Pi.Client
 {
@@ -30,7 +28,7 @@ namespace Riot.Pi.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<GpioPinData>(json));
+            UpsertData(JsonConvert.DeserializeObject<GpioPinData>(json));
             return true;
         }
 
@@ -57,10 +55,10 @@ namespace Riot.Pi.Client
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             PinData = data as GpioPinData;
-            base.ReplaceData(PinData);
+            base.UpsertData(PinData);
         }
     }
 }

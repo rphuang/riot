@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using LogLib;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
-//using UtilLib;
 
-namespace Riot
+namespace HttpLib
 {
     public class HttpRequest
     {
@@ -34,7 +34,12 @@ namespace Riot
         /// Get response from specified url
         /// </summary>
         /// <returns>the json string response</returns>
-        //public string Get(string url, IDictionary<string, string> requestHeaderParams, out HttpWebResponse response, bool keepAlive)
+        public string Get(string url, IDictionary<string, string> requestHeaderParams, out HttpWebResponse response, bool keepAlive)
+        {
+            HttpResponse httpResponse = Get(url, requestHeaderParams, keepAlive);
+            response = httpResponse?.Response;
+            return httpResponse?.Result;
+        }
 
         /// <summary>
         /// Get response from specified url
@@ -50,7 +55,7 @@ namespace Riot
             httpWebRequest.Method = "GET";
             httpWebRequest.KeepAlive = keepAlive;
             httpWebRequest.Timeout = RequestTimeout;
-            //LogUtil.WriteInfo("Requesting Url: {0}", url);
+            LogUtil.WriteInfo("Requesting Url: {0}", url);
             if (requestHeaderParams != null)
             {
                 foreach (var item in requestHeaderParams)
@@ -71,7 +76,7 @@ namespace Riot
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     _httpErrorCount++;
-                    //LogUtil.WriteError("Request Error {0} for {1}", response.StatusCode, url);
+                    LogUtil.WriteError("Request Error {0} for {1}", response.StatusCode, url);
                 }
                 // read the stream associated with the response.
                 json = GetResponseStream(response);
@@ -80,8 +85,8 @@ namespace Riot
                 timer.Stop();
 
                 OnAfterRequest(response, json);
-                //LogUtil.WriteInfo("Response status:{0} Content length:{1} type:{2} Url:{3}",
-                //    response.StatusCode, response.ContentLength, response.ContentType, url);
+                LogUtil.WriteInfo("Response status:{0} Content length:{1} type:{2} Url:{3}",
+                    response.StatusCode, response.ContentLength, response.ContentType, url);
                 success = true;
             }
             catch (WebException ex)
@@ -100,7 +105,7 @@ namespace Riot
             {
                 _exceptionCount++;
                 errorMessage = ex.ToString();
-                //LogUtil.WriteError("Exception on getting {0}: {1}", url, ex.ToString());
+                LogUtil.WriteError("Exception on getting {0}: {1}", url, ex.ToString());
             }
             return new HttpResponse { Success = success, Result = json, Response = response, ErrorMessage = errorMessage };
         }
@@ -155,7 +160,7 @@ namespace Riot
             }
             catch (System.Exception ex)
             {
-                //LogUtil.WriteError("Exception on posting to {0}: {1}", url, ex.ToString());
+                LogUtil.WriteError("Exception on posting to {0}: {1}", url, ex.ToString());
             }
             return result;
         }

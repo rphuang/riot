@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Riot
+namespace LogLib
 {
     /// <summary>
     /// Log utility class
@@ -84,7 +84,7 @@ namespace Riot
         /// <summary>
         /// set the ILog to do the write. default to IotLog to console.
         /// </summary>
-        public static ILog Instance { get; set; } = new IotLog();
+        public static ILog Instance { get; set; } = new ConsoleLog();
 
         /// <summary>
         /// Log Message with particular log level and prepended time stamp

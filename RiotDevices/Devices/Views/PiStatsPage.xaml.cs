@@ -1,7 +1,7 @@
 ﻿using Devices.Models;
 using Devices.Services;
 using FormsLib;
-using Riot;
+using HttpLib;
 using Riot.IoDevice.Client;
 using Riot.Pi;
 using Riot.Pi.Client;

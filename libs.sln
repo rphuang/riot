@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityLib", "EntityLib\Enti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlatformLib", "PlatformLib\PlatformLib.csproj", "{C7904E4C-B89A-4CED-8F01-2627ECE8366C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpLib", "HttpLib\HttpLib.csproj", "{F2909A55-68E1-41B3-AE27-5B2E869E265A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogLib", "LogLib\LogLib.csproj", "{980688D8-E2E1-44E7-B4FB-377FCED015DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{C7904E4C-B89A-4CED-8F01-2627ECE8366C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7904E4C-B89A-4CED-8F01-2627ECE8366C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7904E4C-B89A-4CED-8F01-2627ECE8366C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2909A55-68E1-41B3-AE27-5B2E869E265A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2909A55-68E1-41B3-AE27-5B2E869E265A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2909A55-68E1-41B3-AE27-5B2E869E265A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2909A55-68E1-41B3-AE27-5B2E869E265A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{980688D8-E2E1-44E7-B4FB-377FCED015DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{980688D8-E2E1-44E7-B4FB-377FCED015DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{980688D8-E2E1-44E7-B4FB-377FCED015DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{980688D8-E2E1-44E7-B4FB-377FCED015DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

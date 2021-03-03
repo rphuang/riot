@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityLib", "..\EntityLib\E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsLib", "..\SettingsLib\SettingsLib.csproj", "{D23E97B2-AC90-4AC2-84DF-DB84908E132F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpLib", "..\HttpLib\HttpLib.csproj", "{362D326F-B59A-4C28-9614-35AEE1EB6086}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,18 @@ Global
 		{D23E97B2-AC90-4AC2-84DF-DB84908E132F}.Release|iPhone.Build.0 = Release|Any CPU
 		{D23E97B2-AC90-4AC2-84DF-DB84908E132F}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{D23E97B2-AC90-4AC2-84DF-DB84908E132F}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhone.Build.0 = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Riot
+namespace LogLib
 {
     /// <summary>
     /// Enum that indicates Log Level

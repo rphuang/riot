@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HttpLib;
+using Newtonsoft.Json;
 
 namespace Riot.IoDevice.Client
 {
@@ -27,17 +28,17 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            ReplaceData(JsonConvert.DeserializeObject<HygroThermoData>(json));
+            UpsertData(JsonConvert.DeserializeObject<HygroThermoData>(json));
             return true;
         }
 
         /// <summary>
         /// replace the current Data list with new list
         /// </summary>
-        public override void ReplaceData(IotData data)
+        public override void UpsertData(IotData data)
         {
             HygroThermoData = data as HygroThermoData;
-            base.ReplaceData(HygroThermoData);
+            base.UpsertData(HygroThermoData);
         }
     }
 }

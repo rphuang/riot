@@ -1,4 +1,5 @@
-﻿using Riot;
+﻿using HttpLib;
+using Riot;
 using Riot.Client;
 using Riot.Pi.Client;
 using System;
@@ -28,10 +29,10 @@ namespace Devices.Services
         /// </summary>
         /// <param name="endpoints">the list of endpoints</param>
         /// <returns>returns the root client node that may contain all the child nodes</returns>
-        protected override IotClientNode CreateClientNode(IList<HttpEndpoint> endpoints, IotHttpClient client)
+        protected override IotClientNode CreateClientNode(IList<HttpServiceEndpoint> endpoints, IotHttpClient client)
         {
             IotGenericClient root = new IotGenericClient(client);
-            foreach (HttpEndpoint endpoint in endpoints)
+            foreach (HttpServiceEndpoint endpoint in endpoints)
             {
                 if (string.Equals("PiCar", endpoint.Type, StringComparison.OrdinalIgnoreCase))
                 {

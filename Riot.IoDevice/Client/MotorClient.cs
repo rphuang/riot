@@ -14,20 +14,20 @@ namespace Riot.IoDevice.Client
         public MotorClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            MotorData = new MotorData();
         }
 
         /// <summary>
         /// data for Motor
         /// </summary>
-        public MotorData MotorData { get; private set; } = new MotorData();
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
+        public MotorData MotorData
         {
-            MotorData = data as MotorData;
-            base.UpsertData(MotorData);
+            get { return Data[nameof(MotorData)] as MotorData; }
+            internal set
+            {
+                value.Id = nameof(MotorData);
+                UpsertData(value);
+            }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<MotorData>(json));
+            MotorData = JsonConvert.DeserializeObject<MotorData>(json);
             return true;
         }
 

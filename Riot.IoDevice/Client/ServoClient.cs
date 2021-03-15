@@ -14,26 +14,26 @@ namespace Riot.IoDevice.Client
         public ServoClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            ServoData = new ServoData();
         }
 
         /// <summary>
         /// data for Servo
         /// </summary>
-        public ServoData ServoData { get; private set; } = new ServoData();
+        public ServoData ServoData
+        {
+            get { return Data[nameof(ServoData)] as ServoData; }
+            internal set
+            {
+                value.Id = nameof(ServoData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// The offset angle in angular degree to be applied on the physical device
         /// </summary>
         public int AngleOffset { get; set; }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            ServoData = data as ServoData;
-            base.UpsertData(ServoData);
-        }
 
         /// <summary>
         /// send command to move the servo to specified angle
@@ -64,7 +64,7 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<ServoData>(json));
+            ServoData = JsonConvert.DeserializeObject<ServoData>(json);
             return true;
         }
 

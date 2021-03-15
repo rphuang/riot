@@ -86,7 +86,7 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            System.UpsertData(JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json));
+            System.SystemData = JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json);
             return true;
         }
     }

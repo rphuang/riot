@@ -11,7 +11,15 @@ namespace Riot.Pi.Client
         /// <summary>
         /// data for cpu
         /// </summary>
-        public CpuData CpuData { get; private set; }
+        public CpuData CpuData
+        {
+            get { return Data[nameof(CpuData)] as CpuData; }
+            internal set
+            {
+                value.Id = nameof(CpuData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// constructor
@@ -28,17 +36,8 @@ namespace Riot.Pi.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<CpuData>(json));
+            CpuData = JsonConvert.DeserializeObject<CpuData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            CpuData = data as CpuData;
-            base.UpsertData(CpuData);
         }
     }
 }

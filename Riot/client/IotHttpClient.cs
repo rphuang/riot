@@ -121,13 +121,13 @@ namespace Riot
         /// gets available endpoints from the server
         /// </summary>
         /// <returns>returns a list of endpoints</returns>
-        public IList<HttpEndpoint> DiscoverAvailableEndpoints()
+        public IList<HttpServiceEndpoint> DiscoverAvailableEndpoints()
         {
             HttpResponse response = GetResponse(string.Empty);
             if (response.Success)
             {
                 // deserialize
-                List<HttpEndpoint> endpoints = JsonConvert.DeserializeObject<List<HttpEndpoint>>(response.Result);
+                List<HttpServiceEndpoint> endpoints = JsonConvert.DeserializeObject<List<HttpServiceEndpoint>>(response.Result);
                 return endpoints;
             }
             return null;

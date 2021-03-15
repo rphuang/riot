@@ -14,20 +14,20 @@ namespace Riot.IoDevice.Client
         public RGBLedClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            RGBLedData = new RGBLedData();
         }
 
         /// <summary>
         /// data for RGBLed
         /// </summary>
-        public RGBLedData RGBLedData { get; private set; } = new RGBLedData();
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
+        public RGBLedData RGBLedData 
         {
-            RGBLedData = data as RGBLedData;
-            base.UpsertData(RGBLedData);
+            get { return Data[nameof(RGBLedData)] as RGBLedData; }
+            internal set
+            {
+                value.Id = nameof(RGBLedData);
+                UpsertData(value);
+            }
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<RGBLedData>(json));
+            RGBLedData = JsonConvert.DeserializeObject<RGBLedData>(json);
             return true;
         }
 

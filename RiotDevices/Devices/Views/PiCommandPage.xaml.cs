@@ -155,7 +155,7 @@ namespace Devices.Views
                 if (!string.IsNullOrEmpty(result))
                 {
                     string cmd = string.Format(commandDef.CommandFormat, result);
-                    DisplayCommandResponse(_piSystemClient.Post(cmd));
+                    DisplayCommandResponse(_piSystemClient?.Post(cmd));
                 }
             }
             else
@@ -165,7 +165,7 @@ namespace Devices.Views
                     bool answer = await DisplayAlert(commandDef.Name, "Do you really want to send the command?", "Yes", "Cancel");
                     if (!answer) return;
                 }
-                DisplayCommandResponse(_piSystemClient.Post(commandDef.Command));
+                DisplayCommandResponse(_piSystemClient?.Post(commandDef.Command));
             }
         }
     }

@@ -1,7 +1,7 @@
-﻿using Riot.Client;
+﻿using HttpLib;
+using Riot.Client;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Riot.IoDevice.Client
 {
@@ -15,10 +15,10 @@ namespace Riot.IoDevice.Client
         /// </summary>
         /// <param name="endpoints">the list of endpoints</param>
         /// <returns>returns the root client node that may contain all the child nodes</returns>
-        protected override IotClientNode CreateClientNode(IList<HttpEndpoint> endpoints, IotHttpClient client)
+        protected override IotClientNode CreateClientNode(IList<HttpServiceEndpoint> endpoints, IotHttpClient client)
         {
             IotGenericClient root = new IotGenericClient(client);
-            foreach (HttpEndpoint endpoint in endpoints)
+            foreach (HttpServiceEndpoint endpoint in endpoints)
             {
                 if (string.Equals("HygroThermoSensor", endpoint.Type, StringComparison.OrdinalIgnoreCase))
                 {

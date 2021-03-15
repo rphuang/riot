@@ -14,20 +14,20 @@ namespace Riot.IoDevice.Client
         public StripLedClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            StripLedPatternData = new StripLedPatternData();
         }
 
         /// <summary>
         /// data for Strip LED Pattern
         /// </summary>
-        public StripLedPatternData StripLedPatternData { get; private set; } = new StripLedPatternData();
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
+        public StripLedPatternData StripLedPatternData
         {
-            StripLedPatternData = data as StripLedPatternData;
-            base.UpsertData(StripLedPatternData);
+            get { return Data[nameof(StripLedPatternData)] as StripLedPatternData; }
+            internal set
+            {
+                value.Id = nameof(StripLedPatternData);
+                UpsertData(value);
+            }
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<StripLedPatternData>(json));
+            StripLedPatternData = JsonConvert.DeserializeObject<StripLedPatternData>(json);
             return true;
         }
 

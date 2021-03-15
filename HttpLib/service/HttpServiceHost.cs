@@ -1,7 +1,9 @@
 ﻿using LogLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HttpLib
@@ -14,10 +16,10 @@ namespace HttpLib
         /// <summary>
         /// constructor
         /// </summary>
-        /// <param name="server">the root prefix string for all paths to listen. ex: http://*:5678 </param>
-        public HttpServiceHost(string rootPrefix)
+        /// <param name="serverPrefix">the server prefix string for all paths to listen. ex: http://*:5678 </param>
+        public HttpServiceHost(string serverPrefix)
         {
-            RootPrefix = rootPrefix;
+            ServerPrefix = serverPrefix;
         }
 
         /// <summary>
@@ -26,48 +28,46 @@ namespace HttpLib
         public bool KeepAlive { get; set; }
 
         /// <summary>
-        /// root prefix to listen
+        /// server prefix to listen ex: http://*:5678
         /// </summary>
-        public string RootPrefix { get; set; }
+        public string ServerPrefix { get; set; }
 
         public IList<string> Prefixes { get; private set; } = new List<string>();
 
         /// <summary>
         /// initialize 
         /// </summary>
-        public HttpServiceHost Init()
+        public virtual HttpServiceHost Init()
         {
             _listener = new HttpListener();
             foreach (var item in HttpServiceRequestHandler.Handlers)
             {
-                string prefix = RootPrefix + item.Key;
+                string prefix = ServerPrefix + item.Key;
                 Prefixes.Add(prefix);
                 if (!prefix.EndsWith("/")) prefix += "/";
                 _listener.Prefixes.Add(prefix);
             }
             string csv = string.Join(",", Prefixes);
-            LogUtil.WriteAction($"HttpServiceHost initialized root: {RootPrefix} handlers: {Prefixes.Count} listening: {csv}");
+            LogUtil.WriteAction($"HttpServiceHost initialized root: {ServerPrefix} handlers: {Prefixes.Count} listening: {csv}");
             return this;
         }
 
         /// <summary>
         /// start listener
         /// </summary>
-        public HttpServiceHost Start()
+        public virtual void Start()
         {
             LogUtil.WriteAction($"HttpServiceHost starting");
             _listener.Start();
-            return this;
         }
 
         /// <summary>
         /// stop listener
         /// </summary>
-        public HttpServiceHost Stop()
+        public virtual void Stop()
         {
             LogUtil.WriteAction($"HttpServiceHost stopping");
             _listener.Stop();
-            return this;
         }
 
         /// <summary>
@@ -81,14 +81,15 @@ namespace HttpLib
             HttpListenerResponse response = context.Response;
             LogUtil.WriteAction($"{request.HttpMethod} {request.Url.AbsoluteUri}");
 
-            HttpServiceRequestHandler handler = null;
-            string matchedPath = null;
-            if (!GetRequestHandler(request.Url.AbsolutePath, out handler, out matchedPath))
+            HttpServiceRequestHandler handler;
+            string matchedPath;
+            List<string> unmatchedSegments;
+            if (!GetRequestHandler(request.Url.AbsolutePath, out handler, out matchedPath, out unmatchedSegments))
             {
                 return HttpServiceRequestHandler.CreateResponseForBadRequest(new HttpServiceContext { Context = context, MatchedPath = matchedPath }, "NoHandler");
             }
 
-            HttpServiceContext hostContext = new HttpServiceContext { Context = context, MatchedPath = matchedPath };
+            HttpServiceContext hostContext = new HttpServiceContext { Context = context, MatchedPath = matchedPath, UnmatchedSegments = unmatchedSegments };
             HttpServiceResponse hostResponse = null;
             try
             {
@@ -98,31 +99,34 @@ namespace HttpLib
                 }
                 else if (string.Equals(request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase))
                 {
-                    hostResponse = handler.ProcessGetRequest(hostContext);
+                    hostResponse = handler.ProcessPostRequest(hostContext);
                 }
                 else if (string.Equals(request.HttpMethod, "PUT", StringComparison.OrdinalIgnoreCase))
                 {
-                    hostResponse = handler.ProcessGetRequest(hostContext);
+                    hostResponse = handler.ProcessPutRequest(hostContext);
                 }
+            }
+            catch (Exception err)
+            {
+                hostResponse = HttpServiceRequestHandler.CreateResponseForInternalError(hostContext, handler.Name, err);
+            }
 
+            try
+            {
                 if (hostResponse != null)
                 {
-                    if (!string.IsNullOrEmpty(hostResponse.Content))
-                    {
-                        // send content to response
-                        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(hostResponse.Content);
-                        // Get a response stream and write the response
-                        response.ContentLength64 = buffer.Length;
-                        response.KeepAlive = KeepAlive;
-                        System.IO.Stream output = response.OutputStream;
-                        output.Write(buffer, 0, buffer.Length);
-                        // must close the output stream.
-                        output.Close();
-                    }
-                    else
-                    {
-                        response.ContentLength64 = 0;
-                    }
+                    if (hostResponse.Content == null) hostResponse.Content = string.Empty;
+                    // send content to response
+                    byte[] buffer = Encoding.UTF8.GetBytes(hostResponse.Content);
+                    // Get a response stream and write the response
+                    response.ContentEncoding = Encoding.UTF8;
+                    response.ContentLength64 = buffer.Length;
+                    response.KeepAlive = KeepAlive;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+                    // must close the output stream.
+                    output.Close();
+
                     if (string.IsNullOrEmpty(response.ContentType)) response.ContentType = "application/json";
                 }
                 else
@@ -138,10 +142,11 @@ namespace HttpLib
             return hostResponse;
         }
 
-        private bool GetRequestHandler(string absolutePath, out HttpServiceRequestHandler handler, out string matchedPath)
+        private bool GetRequestHandler(string absolutePath, out HttpServiceRequestHandler handler, out string matchedPath, out List<string> unmatchedSegments)
         {
             handler = null;
             matchedPath = null;
+            unmatchedSegments = null;
             string path = absolutePath;
             // first: find handler that matches the whole path
             if (HttpServiceRequestHandler.Handlers.TryGetValue(absolutePath, out handler))
@@ -161,10 +166,13 @@ namespace HttpLib
                     }
                     else
                     {
+                        if (unmatchedSegments == null) unmatchedSegments = new List<string>();
+                        unmatchedSegments.Insert(0, path.Substring(index + 1));
                         path = path.Substring(0, index);
-                        if (HttpServiceRequestHandler.Handlers.TryGetValue(absolutePath, out handler))
+                        if (HttpServiceRequestHandler.Handlers.TryGetValue(path, out handler))
                         {
                             matchedPath = path;
+                            break;
                         }
                     }
                 }

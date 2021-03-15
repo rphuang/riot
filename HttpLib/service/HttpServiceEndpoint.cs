@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Riot
+namespace HttpLib
 {
     /// <summary>
     /// encapsulate definition of an endpoint (http path) provided by the http service
     /// </summary>
-    public class HttpEndpoint
+    public class HttpServiceEndpoint
     {
         /// <summary>
         /// the name of the endpoint

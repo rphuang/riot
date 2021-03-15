@@ -11,7 +11,15 @@ namespace Riot.Pi.Client
         /// <summary>
         /// data for gpio pin
         /// </summary>
-        public GpioPinData PinData { get; private set; }
+        public GpioPinData PinData
+        {
+            get { return Data[nameof(PinData)] as GpioPinData; }
+            internal set
+            {
+                value.Id = nameof(PinData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// constructor
@@ -28,7 +36,7 @@ namespace Riot.Pi.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<GpioPinData>(json));
+            PinData = JsonConvert.DeserializeObject<GpioPinData>(json);
             return true;
         }
 
@@ -50,15 +58,6 @@ namespace Riot.Pi.Client
         {
             string json = string.Format("{{\"value\": {0}}}", value);
             return Client.Post(FullPath, json);
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            PinData = data as GpioPinData;
-            base.UpsertData(PinData);
         }
     }
 }

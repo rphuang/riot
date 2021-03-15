@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HttpLib;
+using System.Collections.Generic;
 
 namespace Riot
 {
@@ -16,7 +17,7 @@ namespace Riot
         {
             IotHttpClient client = new IotHttpClient(serverAndPort, userAndPassword);
             IotClientNode root = new IotClientNode("", client, null);
-            IList<HttpEndpoint> endpoints = client.DiscoverAvailableEndpoints();
+            IList<HttpServiceEndpoint> endpoints = client.DiscoverAvailableEndpoints();
             if (endpoints?.Count > 0)
             {
                 foreach (IotClientFactory factory in Factories)
@@ -33,7 +34,7 @@ namespace Riot
         /// </summary>
         /// <param name="endpoints">the list of endpoints</param>
         /// <returns>returns the root client node that may contain all the child nodes</returns>
-        protected abstract IotClientNode CreateClientNode(IList<HttpEndpoint> endpoints, IotHttpClient client);
+        protected abstract IotClientNode CreateClientNode(IList<HttpServiceEndpoint> endpoints, IotHttpClient client);
 
         protected IotClientFactory()
         {

@@ -52,14 +52,23 @@ namespace Devices.Views
             StopRefresh();
         }
 
+        private bool _initialized;
+        private bool _failedInit;    // force to re-discover if failed to initialize
+        private Topic _monitorTopic;
+        private DiscoverService _discoverService;
+        private bool _updatePiStats;
+        private SystemClient _piSystem;
+        private HygroThermoSensorClient _hygroThermoSensor;
+
         private void Initialize()
         {
             if (_initialized) return;
 
-            _discoverService = DiscoverService.GetOrCreateService(_monitorTopic.Server, _monitorTopic.Credential);
+            _discoverService = DiscoverService.GetOrCreateService(_monitorTopic.Server, _monitorTopic.Credential, _failedInit);
             _piSystem = _discoverService.GetClientNode<SystemClient>();
             _hygroThermoSensor = _discoverService.GetClientNode<HygroThermoSensorClient>();
-            _initialized = true;
+            _initialized = _piSystem != null;
+            _failedInit = _piSystem == null;
         }
 
         private async void UpdateDisplayAsync()
@@ -184,12 +193,7 @@ namespace Devices.Views
             _initialized = false;
         }
 
-        private bool _initialized;
-        private Topic _monitorTopic;
-        private DiscoverService _discoverService;
-        private bool _updatePiStats;
-        private SystemClient _piSystem;
-        private HygroThermoSensorClient _hygroThermoSensor;
+
 
         private void StartStopButton_Clicked(object sender, EventArgs e)
         {

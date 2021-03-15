@@ -17,7 +17,15 @@ namespace Riot.SmartPlug.Client
         /// <summary>
         /// the system data
         /// </summary>
-        public KasaHs1xxTimeData TimeData { get; private set; }
+        public KasaHs1xxTimeData TimeData
+        {
+            get { return Data[nameof(TimeData)] as KasaHs1xxTimeData; }
+            internal set
+            {
+                value.Id = nameof(TimeData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// process the response from server and update the properties
@@ -26,17 +34,8 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<KasaHs1xxTimeData>(json));
+            TimeData = JsonConvert.DeserializeObject<KasaHs1xxTimeData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            TimeData = data as KasaHs1xxTimeData;
-            base.UpsertData(TimeData);
         }
     }
 }

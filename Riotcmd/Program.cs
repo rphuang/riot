@@ -5,7 +5,6 @@ using Riot.Pi.Client;
 using Riot.SmartPlug.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace pi
 {
@@ -96,11 +95,11 @@ namespace pi
             httpIotClient.SetCredential(credential);
 
             // discover server endpoints and paths
-            IList<HttpEndpoint> endpoints = httpIotClient.DiscoverAvailableEndpoints();
+            IList<HttpServiceEndpoint> endpoints = httpIotClient.DiscoverAvailableEndpoints();
             if (endpoints?.Count > 0)
             {
                 Console.WriteLine($"Server {server} endpoints:");
-                foreach (HttpEndpoint endpoint in endpoints)
+                foreach (HttpServiceEndpoint endpoint in endpoints)
                 {
                     Console.WriteLine($" name:{endpoint.Name} type:{endpoint.Type} path:{endpoint.Path} parent:{endpoint.Parent} url:{endpoint.Url}");
                 }

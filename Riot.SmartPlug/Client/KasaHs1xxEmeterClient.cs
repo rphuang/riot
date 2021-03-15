@@ -17,7 +17,15 @@ namespace Riot.SmartPlug.Client
         /// <summary>
         /// the system data
         /// </summary>
-        public KasaHs1xxEmeterData EmeterData { get; private set; }
+        public KasaHs1xxEmeterData EmeterData
+        {
+            get { return Data[nameof(EmeterData)] as KasaHs1xxEmeterData; }
+            internal set
+            {
+                value.Id = nameof(EmeterData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// process the response from server and update the properties
@@ -26,17 +34,8 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<KasaHs1xxEmeterData>(json));
+            EmeterData = JsonConvert.DeserializeObject<KasaHs1xxEmeterData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            EmeterData = data as KasaHs1xxEmeterData;
-            base.UpsertData(EmeterData);
         }
     }
 }

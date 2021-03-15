@@ -11,7 +11,15 @@ namespace Riot.Pi.Client
         /// <summary>
         /// data for memory
         /// </summary>
-        public MemoryData MemoryData { get; private set; }
+        public MemoryData MemoryData
+        {
+            get { return Data[nameof(MemoryData)] as MemoryData; }
+            internal set
+            {
+                value.Id = nameof(MemoryData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// constructor
@@ -22,22 +30,13 @@ namespace Riot.Pi.Client
         }
 
         /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            MemoryData = data as MemoryData;
-            base.UpsertData(MemoryData);
-        }
-
-        /// <summary>
         /// process the response from server and update the properties
         /// </summary>
         protected override bool ProcessResponse(HttpResponse response)
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<MemoryData>(json));
+            MemoryData = JsonConvert.DeserializeObject<MemoryData>(json);
             return true;
         }
     }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using HttpLib;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Riot.SmartPlug.Client
 {
@@ -14,11 +14,11 @@ namespace Riot.SmartPlug.Client
         /// </summary>
         /// <param name="endpoints">the list of endpoints</param>
         /// <returns>returns the root client node that may contain all the child nodes</returns>
-        protected override IotClientNode CreateClientNode(IList<HttpEndpoint> endpoints, IotHttpClient client)
+        protected override IotClientNode CreateClientNode(IList<HttpServiceEndpoint> endpoints, IotHttpClient client)
         {
             SmartPlugClient root = null;
             List<IotClientNode> subnodes = new List<IotClientNode>();
-            foreach (HttpEndpoint endpoint in endpoints)
+            foreach (HttpServiceEndpoint endpoint in endpoints)
             {
                 if (string.Equals("KasaSmartPlug", endpoint.Type, StringComparison.OrdinalIgnoreCase))
                 {

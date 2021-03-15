@@ -18,12 +18,21 @@ namespace Riot.Pi.Client
             Children.Add(CpuClient);
             MemoryClient = new MemoryClient("memory", Client, this);
             Children.Add(MemoryClient);
+            SystemData = new SystemData() { Id = nameof(SystemData) };
         }
 
         /// <summary>
         /// the system data
         /// </summary>
-        public SystemData SystemData { get; private set; } = new SystemData();
+        public SystemData SystemData
+        {
+            get { return Data[nameof(SystemData)] as SystemData; }
+            internal set
+            {
+                value.Id = nameof(SystemData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// CpuClient in the system
@@ -47,15 +56,6 @@ namespace Riot.Pi.Client
         }
 
         /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            SystemData = data as SystemData;
-            base.UpsertData(SystemData);
-        }
-
-        /// <summary>
         /// get full path of the system node
         /// </summary>
         public override string FullPath
@@ -73,7 +73,7 @@ namespace Riot.Pi.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<SystemData>(json));
+            SystemData = JsonConvert.DeserializeObject<SystemData>(json);
             return true;
         }
     }

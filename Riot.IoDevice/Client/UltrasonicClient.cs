@@ -14,12 +14,21 @@ namespace Riot.IoDevice.Client
         public UltrasonicClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            UltrasonicData = new UltrasonicData();
         }
 
         /// <summary>
         /// data for Ultrasonic
         /// </summary>
-        public UltrasonicData UltrasonicData { get; private set; } = new UltrasonicData();
+        public UltrasonicData UltrasonicData
+        {
+            get { return Data[nameof(UltrasonicData)] as UltrasonicData; }
+            internal set
+            {
+                value.Id = nameof(UltrasonicData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// process the response from server and update the properties
@@ -28,17 +37,8 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<UltrasonicData>(json));
+            UltrasonicData = JsonConvert.DeserializeObject<UltrasonicData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            UltrasonicData = data as UltrasonicData;
-            base.UpsertData(UltrasonicData);
         }
 
         /// <summary>

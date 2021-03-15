@@ -28,10 +28,25 @@ namespace Riot
         }
 
         /// <summary>
+        /// get the data by ID
+        /// </summary>
+        public T GetData<T>(string id) where T : IotData
+        {
+            IotData data;
+            if (Data.TryGetValue(id, out data))
+            {
+                return data as T;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// update or insert the data in Data dictionary
         /// </summary>
         public virtual void UpsertData(IotData data)
         {
+            if (data == null) return;
+            data.Parent = this;
             if (Data.ContainsKey(data.Id)) Data[data.Id] = data;
             else Data.Add(data.Id, data);
         }

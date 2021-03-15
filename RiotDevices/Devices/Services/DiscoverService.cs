@@ -16,10 +16,18 @@ namespace Devices.Services
         /// <summary>
         /// Get Or Create Service for the specified server
         /// </summary>
-        public static DiscoverService GetOrCreateService(string serverAndPort, string credential)
+        public static DiscoverService GetOrCreateService(string serverAndPort, string credential, bool create = false)
         {
             DiscoverService service;
-            if (!_serviceDictionary.TryGetValue(serverAndPort, out service))
+            if (_serviceDictionary.TryGetValue(serverAndPort, out service))
+            {
+                if (create)
+                {
+                    service = new DiscoverService(serverAndPort, credential);
+                    _serviceDictionary[serverAndPort] = service;
+                }
+            }
+            else
             {
                 service = new DiscoverService(serverAndPort, credential);
                 _serviceDictionary.Add(serverAndPort, service);

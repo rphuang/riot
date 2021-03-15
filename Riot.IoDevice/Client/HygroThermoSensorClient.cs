@@ -19,7 +19,15 @@ namespace Riot.IoDevice.Client
         /// <summary>
         /// data for HygroThermo sensor
         /// </summary>
-        public HygroThermoData HygroThermoData { get; private set; }
+        public HygroThermoData HygroThermoData
+        {
+            get { return Data[nameof(HygroThermoData)] as HygroThermoData; }
+            internal set
+            {
+                value.Id = nameof(HygroThermoData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// process the response from server and update the properties
@@ -28,17 +36,8 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<HygroThermoData>(json));
+            HygroThermoData = JsonConvert.DeserializeObject<HygroThermoData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            HygroThermoData = data as HygroThermoData;
-            base.UpsertData(HygroThermoData);
         }
     }
 }

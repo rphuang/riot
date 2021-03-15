@@ -95,11 +95,14 @@ namespace HttpLib
                 response = (HttpWebResponse)ex.Response;
                 errorMessage = ex.ToString();
                 //LogUtil.WriteError("Exception on getting {0}: {1}", url, ex.ToString());
-                try
+                if (response != null)
                 {
-                    json = GetResponseStream(response);
+                    try
+                    {
+                        json = GetResponseStream(response);
+                    }
+                    catch { }
                 }
-                catch { }
             }
             catch (System.Exception ex)
             {

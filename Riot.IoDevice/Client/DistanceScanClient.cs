@@ -15,12 +15,21 @@ namespace Riot.IoDevice.Client
         public DistanceScanClient(string id, IotHttpClient client, IotNode parent)
             : base(id, client, parent)
         {
+            DistanceScanData = new DistanceScanData { Id = nameof(DistanceScanData) };
         }
 
         /// <summary>
         /// data for DistanceScan
         /// </summary>
-        public DistanceScanData DistanceScanData { get; private set; } = new DistanceScanData();
+        public DistanceScanData DistanceScanData
+        {
+            get { return Data[nameof(DistanceScanData)] as DistanceScanData; }
+            internal set
+            {
+                value.Id = nameof(DistanceScanData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// process the response from server and update the properties
@@ -29,17 +38,8 @@ namespace Riot.IoDevice.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<DistanceScanData>(json));
+            DistanceScanData = JsonConvert.DeserializeObject<DistanceScanData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            DistanceScanData = data as DistanceScanData;
-            base.UpsertData(DistanceScanData);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Riot.IoDevice.Client
                     startHorizontal, startVertical, endHorizontal, endVertical, incHorizontal, incVertical);
                 string jsonResponse = Client.Post(FullPath, jsonBody);
                 // deserialize
-                UpsertData(JsonConvert.DeserializeObject<DistanceScanData>(jsonResponse));
+                DistanceScanData = JsonConvert.DeserializeObject<DistanceScanData>(jsonResponse);
                 return jsonResponse;
             }
             catch (Exception err)

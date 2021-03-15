@@ -17,7 +17,15 @@ namespace Riot.SmartPlug.Client
         /// <summary>
         /// the system data
         /// </summary>
-        public KasaHs1xxSystemData SystemData { get; private set; }
+        public KasaHs1xxSystemData SystemData
+        {
+            get { return Data[nameof(SystemData)] as KasaHs1xxSystemData; }
+            internal set
+            {
+                value.Id = nameof(SystemData);
+                UpsertData(value);
+            }
+        }
 
         /// <summary>
         /// turn the smart plug on or off
@@ -55,17 +63,8 @@ namespace Riot.SmartPlug.Client
         {
             string json = response.Result;
             // deserialize
-            UpsertData(JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json));
+            SystemData = JsonConvert.DeserializeObject<KasaHs1xxSystemData>(json);
             return true;
-        }
-
-        /// <summary>
-        /// replace the current Data list with new list
-        /// </summary>
-        public override void UpsertData(IotData data)
-        {
-            SystemData = data as KasaHs1xxSystemData;
-            base.UpsertData(SystemData);
         }
     }
 }

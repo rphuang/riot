@@ -14,6 +14,55 @@ namespace Devices.Models
             get { return s_Settings; }
         }
 
+        #region settings for phone web service
+
+        /// <summary>
+        /// if enabled a shell flyout item will be added to start phone service
+        /// </summary>
+        public bool EnablePhoneService
+        {
+            get { return GetOrAddSetting(nameof(EnablePhoneService), true, PhoneServiceGroupId); }
+            set { SetSetting(nameof(EnablePhoneService), value, PhoneServiceGroupId); }
+        }
+
+        /// <summary>
+        /// server prefix to listen ex: http://*:5678
+        /// </summary>
+        public string ServerPrefix
+        {
+            get { return GetOrAddSetting(nameof(ServerPrefix), "http://*:5678", PhoneServiceGroupId); }
+            set { SetSetting(nameof(ServerPrefix), value, PhoneServiceGroupId); }
+        }
+
+        /// <summary>
+        /// root path to listen. can be empty string or startwith "/" but not end with "/" 
+        /// </summary>
+        public string ServiceRootPath
+        {
+            get { return GetOrAddSetting(nameof(ServiceRootPath), string.Empty, PhoneServiceGroupId); }
+            set { SetSetting(nameof(ServiceRootPath), value, PhoneServiceGroupId); }
+        }
+
+        /// <summary>
+        /// root path to listen for actions. can be empty string or startwith "/" but not end with "/" 
+        /// </summary>
+        public string ServiceActionRootPath
+        {
+            get { return GetOrAddSetting(nameof(ServiceActionRootPath), "/cmd", PhoneServiceGroupId); }
+            set { SetSetting(nameof(ServiceActionRootPath), value, PhoneServiceGroupId); }
+        }
+
+        /// <summary>
+        /// credentials for accessing phone web service in format "user1:password1, user2:password2"
+        /// </summary>
+        public string ServiceCredentials
+        {
+            get { return GetOrAddSetting(nameof(ServiceCredentials), string.Empty, PhoneServiceGroupId); }
+            set { SetSetting(nameof(ServiceCredentials), value, PhoneServiceGroupId); }
+        }
+
+        #endregion settings for phone web service
+
         /// <summary>
         /// the Monitor Refresh Rate in seconds
         /// </summary>
@@ -129,6 +178,7 @@ namespace Devices.Models
 
         private const string ThingsSettingsFolder = "docs";
         private const string ThingsSettingsFile = "devicessettings.txt";
+        private const string PhoneServiceGroupId = "PhoneService";
         private static DeviceSettings s_Settings = new DeviceSettings();
     }
 }

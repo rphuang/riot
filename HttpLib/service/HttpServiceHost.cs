@@ -86,25 +86,14 @@ namespace HttpLib
             List<string> unmatchedSegments;
             if (!GetRequestHandler(request.Url.AbsolutePath, out handler, out matchedPath, out unmatchedSegments))
             {
-                return HttpServiceRequestHandler.CreateResponseForBadRequest(new HttpServiceContext { Context = context, MatchedPath = matchedPath }, "NoHandler");
+                return HttpServiceRequestHandler.CreateResponseForBadRequest(new HttpServiceContext { Context = context, MatchedPath = matchedPath }, $"NotSupported: {request.Url.AbsolutePath}");
             }
 
             HttpServiceContext hostContext = new HttpServiceContext { Context = context, MatchedPath = matchedPath, UnmatchedSegments = unmatchedSegments };
             HttpServiceResponse hostResponse = null;
             try
             {
-                if (string.Equals(request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
-                {
-                    hostResponse = handler.ProcessGetRequest(hostContext);
-                }
-                else if (string.Equals(request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase))
-                {
-                    hostResponse = handler.ProcessPostRequest(hostContext);
-                }
-                else if (string.Equals(request.HttpMethod, "PUT", StringComparison.OrdinalIgnoreCase))
-                {
-                    hostResponse = handler.ProcessPutRequest(hostContext);
-                }
+                hostResponse = handler.ProcessRequest(hostContext);
             }
             catch (Exception err)
             {
@@ -166,8 +155,12 @@ namespace HttpLib
                     }
                     else
                     {
-                        if (unmatchedSegments == null) unmatchedSegments = new List<string>();
-                        unmatchedSegments.Insert(0, path.Substring(index + 1));
+                        string unmatched = path.Substring(index + 1);
+                        if (!string.IsNullOrEmpty(unmatched))
+                        {
+                            if (unmatchedSegments == null) unmatchedSegments = new List<string>();
+                            unmatchedSegments.Insert(0, unmatched);
+                        }
                         path = path.Substring(0, index);
                         if (HttpServiceRequestHandler.Handlers.TryGetValue(path, out handler))
                         {

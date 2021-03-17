@@ -1,6 +1,4 @@
-﻿using HttpLib;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,14 +13,15 @@ namespace HttpLib
         /// <summary>
         /// constructor
         /// </summary>
-        public EndpointRequestHandler(string name, string path) : base(name, "ServiceEndpoint", path)
+        public EndpointRequestHandler(string name, string path, string credentials)
+            : base(name, "ServiceEndpoint", path, credentials)
         {
         }
 
         /// <summary>
         /// derived class must implement to handle GET request
         /// </summary>
-        public override HttpServiceResponse ProcessGetRequest(HttpServiceContext context)
+        protected override HttpServiceResponse ProcessGetRequest(HttpServiceContext context)
         {
             HttpListenerRequest request = context.Context.Request;
             HttpListenerResponse response = context.Context.Response;
@@ -41,7 +40,7 @@ namespace HttpLib
                 response.ContentType = "application/json";
                 return new HttpServiceResponse { Request = request, Response = response, Content = responseString, Success = true };
             }
-            return CreateResponseForBadRequest(context, Name, "Invalid Root Path");
+            return CreateResponseForBadRequest(context, Name, "InvalidRootPath: " + request.Url.AbsolutePath);
         }
 
         private HttpServiceEndpoint CreateHttpServiceEndpoint(HttpServiceRequestHandler handler, string rootUri)

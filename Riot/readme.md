@@ -14,11 +14,9 @@ Refer to other projects to use and extend the base classes.
     * IotLog - default log to console
     * LogUtil - static utility class for loging
 ## HTTP utilities
-    * HttpEndpoint - defines the properties for an endpoint that can be discovere from RIOT service
-    * HttpRequest - convenient wrapper for http request that without throwing exception upon non-success status
-    * HttpResponse - convenient wrapper for http response
     * HttpTargetSite - defines the properties for a target site that used for push notification
 ## HTTP client
     * IotClientNode - an IotNode that implements HTTP protocol
     * IotHttpClient - utility class for http request
     * IotClientFactory - the base factory class and static members to discover and create client nodes
+    * ISubscribe - interface to subscribe push notification to remote service

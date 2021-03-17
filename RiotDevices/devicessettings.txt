@@ -65,6 +65,14 @@ Group
   Command = {Custom Command, Enter the command to execute.}
 EndGroup
 
+Group=PhoneService
+  EnableWebService=true
+  ServerPrefix=http://*:5678
+  ServiceRootPath=
+  ServiceActionRootPath=/cmd
+  ServiceCredentials=
+EndGroup=PhoneService
+
 MotorSpeed=90
 MonitorRefreshRate=1.1
 SteeringAngle=40

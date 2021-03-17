@@ -1,6 +1,6 @@
 # Overview
-RIOT (REST IOT) is intended to simplify and componentize the code to build robotic kits around Raspberry Pi for both server (backend) and clients. 
-It supports the Adeept Mars PiCar. However, it is designed with flexibility and extensibility and is relatively easy to extend to other kits and for general purpose IOT.
+RIOT (REST IOT) is intended to simplify and componentize the code to build robotic kits with REST style web service.
+It is designed with flexibility and extensibility and is relatively easy to extend to general purpose IOT.
 
 The followings are in the repository.
 * piServices package - an HTTP service with simple REST IOT protocol for client-server communication. It provides basic gpio, cpu, and memory data via HTTP. Extensibility example can be found in the picarServer.
@@ -8,8 +8,8 @@ The followings are in the repository.
 * pySmartPlugService module - a RIOT service that provide remote access/control to TP-Link Kasa HS1xx smart plug.
 * videoStreaming package - an HTTP video streming service based on Raspberry Pi camera. Usage example can be found in the picarServer.
 * picarServer module - this is the server for Adeept Mars PiCar. Besides the otiginal TCP support it added HTTP support. It is (mostly) backward compatible with existing TCP client.
-* Client IOT lib (.NET C#) - a set of classes that encapsulates sensor/device compoennts on the server via HTTP. For now, mostly limited to what in Adeept Mars PiCar.
-* Simple Android app (Xamarin based) - to control Adeept Mars PiCar via HTTP 
+* Riot class libs (.NET C#) - a set of class libraries that encapsulates sensor/device compoennts on the server via HTTP.
+* Simple Android app (Xamarin based) - to monitor and control Raspberry Pi, Kasa smart plug, Adeept Mars PiCar, and runs web service on the phone to serve sensor data and some actions
 * examples - contains simple example code for using the packages
 
 # Getting Started
@@ -48,9 +48,14 @@ The followings are in the repository.
         * Delta Camera Angle: the delta angle to increment when holding the head's right/left/top/down buttons
         * Config distance scan with start/end angle position and angle increment
     7. Config smart plug by following the same steps as 4.
-
-# Coming 
-* ServiceStack based HTTP server for RIOT that supports connected Arduino devices with REST-ish non-HTTP communication.
+    8. Alternatively, edit the devicessettings.txt file directly to change server IP, credential, and adding new servers new smart plugs. Start by copying the file from the RiotDevices folder to the Android device's docs folder.
+    9. Change the commands by adding/updating the groups with Type = PiCommand.
+    10. Configure phone web service by updateing the following settings
+        * whether to enable the phone web service: EnableWebService=true
+        * the port number for the web service: ServerPrefix=http://*:5678
+        * the root path for service: ServiceRootPath=
+        * the command root path for the service: ServiceActionRootPath=/cmd
+        * list of user:password: ServiceCredentials= user1:password1, user2:password2
 
 # Details
 
@@ -140,19 +145,17 @@ The Riot.SmartPlug implements the client to access/control smart plugs through w
 Currently, only the Kasa HS1xx smart plugs are supported.
 It includes followings.
 
-### RiotDevices
-The RiotDevices is a simple Android app to monitor and control the followings:
-* Monitor Raspberry Pi's CPU amd memory status. System commands, like reboot and shutdown, can also posted to the Pi.
-* View Kasa smart plugs (model HS1xx) status and control on/off of the plugs.
-* Control robotic PiCar (Adeept Mars PiCar)
+### Riot.Phone
+The Riot.Phone provides smartphone's sensor data via Riot web service. It also supports some actions that can be posted to the service to perform on the phone.
 
 ## RiotDevices - Android App
 The RiotDevices is a simple Android app to monitor and control devices via web service using RIOT HTTP protocol.
 The Android App is built with the Riot libraries and Xamarin Forms. It should be relative easy to make it work on iOS but had not tried on any IOS devices!!
+* Monitor the phone's sensors and device info
+* Start a web service on the phone to provide senor data remotely and some remote actions such as text to speech and vibrate
 * Monitor Raspberry Pi's CPU amd memory status. 
 * Send system commands, like reboot and shutdown, can also posted to the Pi.
-* View Kasa smart plugs (model HS1xx) status 
-* Control on/off of the switch, reboot the plug, and set led-off status.
+* View Kasa smart plugs (model HS1xx) status and control on/off of the switch, reboot the plug, and set led-off status.
 * Control robotic PiCar (Adeept Mars PiCar)
 * Video streaming via HTTP.
 

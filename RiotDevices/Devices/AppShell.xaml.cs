@@ -18,6 +18,11 @@ namespace Devices
             Routing.RegisterRoute(nameof(PiCarPage), typeof(PiCarPage));
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
 
+            // load web service shell item
+            if (DeviceSettings.Instance.EnablePhoneService)
+            {
+                AddShellItem("Phone Service", new PhoneServicePage());
+            }
             // load topic items
             Topics.InitializeTopics();
             foreach (Topic topic in Topics.TopicItems.Values)

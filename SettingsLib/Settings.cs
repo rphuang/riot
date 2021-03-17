@@ -37,15 +37,18 @@ namespace SettingsLib
         /// <typeparam name="T">the data type</typeparam>
         /// <param name="name">the name of the setting</param>
         /// <param name="defaultValue">the default value when adding new setting</param>
+        /// <param name="groupId">optional group ID if the setting is in a group</param>
         /// <returns>the setting value</returns>
-        public T GetOrAddSetting<T>(string name, T defaultValue)
+        public T GetOrAddSetting<T>(string name, T defaultValue, string groupId = null)
         {
+            string key = name;
+            if (!string.IsNullOrEmpty(groupId)) key = $"{groupId}.{name}";
             string value;
-            if (SettingsDictionary.TryGetValue(name, out value))
+            if (SettingsDictionary.TryGetValue(key, out value))
             {
                 return (T)System.Convert.ChangeType(value, typeof(T));
             }
-            SetSetting(name, defaultValue.ToString());
+            SetSetting(key, defaultValue.ToString(), groupId);
             return defaultValue;
         }
 
@@ -91,12 +94,33 @@ namespace SettingsLib
         /// <summary>
         /// set a setting
         /// </summary>
-        public void SetSetting(string name, object value)
+        public void SetSetting(string name, object value, string groupId = null)
         {
+            string key = name;
+            if (!string.IsNullOrEmpty(groupId)) key = $"{groupId}.{name}";
             string strValue = value?.ToString();
-            if (SettingsDictionary.ContainsKey(name)) SettingsDictionary[name] = strValue;
-            else SettingsDictionary.Add(name, strValue);
+            if (SettingsDictionary.ContainsKey(key)) SettingsDictionary[key] = strValue;
+            else SettingsDictionary.Add(key, strValue);
+            SetGroupSetting(groupId, name, value);
+
             if (AutoSave) SaveSettings();
+        }
+
+        /// <summary>
+        /// set a setting value for a group
+        /// </summary>
+        public void SetGroupSetting(string groupId, string name, object value)
+        {
+            if (!string.IsNullOrEmpty(groupId))
+            {
+                SettingGroup group;
+                if (!GroupsDictionary.TryGetValue(groupId, out group))
+                {
+                    group = new SettingGroup { Id = groupId };
+                    GroupsDictionary.Add(groupId, group);
+                }
+                group.SetSetting(name, value);
+            }
         }
 
         /// <summary>

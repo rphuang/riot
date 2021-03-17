@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Devices.Views.PhoneServicePage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem x:Name="TestButton" Text="Test" Clicked="TestButton_Clicked" />
+        <ToolbarItem x:Name="StartStopButton" Text="Start" Clicked="StartStopButton_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="4">
+                <Grid x:Name="CommandsGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Text="Host Name" />
+                <Label Grid.Row="0" Grid.Column="1" x:Name="HostNameLabel" Text="Host Name ..." MaxLines="1" />
+                <Label Grid.Row="1" Grid.Column="0" Text="Host IP Address" />
+                <Label Grid.Row="1" Grid.Column="1" x:Name="AddressLabel" Text="Host IP ..." MaxLines="1" />
+                <Label Grid.Row="2" Grid.Column="0" Text="Listen Root" />
+                <Label Grid.Row="2" Grid.Column="1" x:Name="RootPrefixLabel" Text="Root ..." MaxLines="1" />
+            </Grid>
+            <Label x:Name="TextLabel" Text="..." MaxLines="200" />
+        </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

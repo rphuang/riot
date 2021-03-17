@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SettingsLib", "..\SettingsL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpLib", "..\HttpLib\HttpLib.csproj", "{362D326F-B59A-4C28-9614-35AEE1EB6086}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riot.Phone", "..\Riot.Phone\Riot.Phone.csproj", "{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,18 @@ Global
 		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhone.Build.0 = Release|Any CPU
 		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{362D326F-B59A-4C28-9614-35AEE1EB6086}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhone.Build.0 = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

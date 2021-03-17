@@ -7,13 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\EntityLib\EntityLib.csproj" />
     <ProjectReference Include="..\..\PlatformLib\PlatformLib.csproj" />
     <ProjectReference Include="..\..\Riot.IoDevice\Riot.IoDevice.csproj" />
+    <ProjectReference Include="..\..\Riot.Phone\Riot.Phone.csproj" />
     <ProjectReference Include="..\..\Riot.Pi\Riot.Pi.csproj" />
     <ProjectReference Include="..\..\Riot.SmartPlug\Riot.SmartPlug.csproj" />
     <ProjectReference Include="..\..\Riot\Riot.csproj" />
@@ -28,6 +29,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Views\Hs1xxPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PhoneServicePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

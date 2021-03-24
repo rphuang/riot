@@ -114,11 +114,11 @@ class FaceTracker():
             color = self.boxColor
             if self.trackedFaces[fid].quality < self.trackQualityBar:
                 color = self.lowBarBoxColor
-            cv2.rectangle(img, (t_x+pad, t_y+pad), (t_x+t_w-pad, t_y+t_h-pad), color, 2)
+            cv2.rectangle(img, (t_x+pad, t_y+pad), (t_x+t_w-pad, t_y+t_h-pad), color, 1)
 
             if self.debugMode:
                 msg = self.trackedFaces[fid].name + '  ' + str(self.trackedFaces[fid].quality)
-                cv2.putText(img, msg, (int(t_x), int(t_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                cv2.putText(img, msg, (int(t_x), int(t_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         return img
 
     def detectFaces(self, img):

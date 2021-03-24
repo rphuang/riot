@@ -32,8 +32,8 @@ def router(root, path1, path2, path3):
     return BaseRequestHandler.processRequest(request)
 
 if __name__ == '__main__':
-    defaultHttpPort = 8688
-    configFile='picarconfig.txt'
+    defaultHttpPort = 8001
+    configFile='/home/pi/src/picarServer/picarconfig.txt'
     if len(sys.argv) > 1:
         configFile = sys.argv[1]
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         picarConfig.autoSave = True
         picarConfig.save()
 
-        authorizationList = picarConfig.getOrAdd('PiCar.AuthorizationList', '')
+        authorizationList = picarConfig.getOrAdd('piCar.AuthorizationList', '')
         # create proper RequestHandlers
         sysHandler = PiSysRequestHandler(name='PiCarSystem', authorizationList=authorizationList)
         gpioHandler = PiGpioRequestHandler(name='PiCarGpio', authorizationList=authorizationList)

@@ -8,12 +8,12 @@ class Camera(BaseCamera):
     width = 1280
     height =720
 
-    def __init__(self, width=1280, height=720):
+    def __init__(self, width=1280, height=720, crosshair=False):
         if os.environ.get('OPENCV_CAMERA_SOURCE'):
             Camera.set_video_source(int(os.environ['OPENCV_CAMERA_SOURCE']))
         Camera.width = width
         Camera.height = height
-        super(Camera, self).__init__()
+        super(Camera, self).__init__(crosshair=crosshair)
 
     @staticmethod
     def set_video_source(source):

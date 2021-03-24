@@ -1,0 +1,28 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          server.py
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: PiCar Server
+# Description:       PiCar server control with http service and tcp service.
+### END INIT INFO
+
+case "${1}" in
+        start)
+                sudo python3 /home/pi/src/picarServer/server.py  >> /var/log/picar.log 2>&1 &
+                ;;
+
+        stop|restart|force-reload)
+
+                ;;
+
+        *)
+                echo "Usage: ${0} {start|stop|restart|force-reload}" >&2
+                exit 1
+                ;;
+esac
+
+exit 0

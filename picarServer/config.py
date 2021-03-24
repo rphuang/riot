@@ -3,9 +3,9 @@
 # Description : persistent configuration management class
 
 class Config(object):
-    """ simple key-value persistent configuration management class """
+    """ simple key=value persistent configuration management class """
     def __init__(self, filePath, autoSave=True):
-        """ construct a Config by loading configuration comma separated settings from file
+        """ construct a Config by loading configuration "=" separated settings from file
         """
         self.filePath = filePath
         self.autoSave = autoSave
@@ -18,7 +18,7 @@ class Config(object):
                     if line.startswith('#') or len(line) == 0:
                         pass
                     else:
-                        key, value = line.split(',')
+                        key, value = line.split('=')
                         self.settings[key] = value
                 except:
                     print('Invalid setting: ' + line)
@@ -43,10 +43,9 @@ class Config(object):
     def set(self, key, value):
         """ update/add the setting value by key """
         self.settings[key] = value
+        self.dirty = True
         if self.autoSave:
             self.save()
-        else:
-            self.dirty = True
         return value
 
     def save(self, forceSave=False):
@@ -54,7 +53,7 @@ class Config(object):
         if self.dirty or forceSave:
             with open(self.filePath, "w") as f:
                 for key in self.settings:
-                    f.write(key + ',' + str(self.settings[key]) + '\n')
+                    f.write(key + '=' + str(self.settings[key]) + '\n')
             self.dirty = False
 
 

@@ -85,6 +85,6 @@ if __name__ == '__main__':
     port = 8000
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
-    camera = Camera()
+    camera = Camera(crosshair=True)
     classifier = cv2.CascadeClassifier('data/haarcascade_frontalface_alt.xml')
     runVideoStreaming(port, camera, classifier, debug=True, threaded=True)

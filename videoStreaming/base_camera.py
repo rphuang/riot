@@ -1,5 +1,6 @@
 import time
 import threading
+import cv2
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -63,7 +64,11 @@ class BaseCamera(object):
     faceTracker = None  # face tracking object
     event = CameraEvent()
 
-    def __init__(self):
+    def __init__(self, crosshair=False):
+        """ construct an instance of camera
+        crosshair - whether to draw crosshair in the center of each frame
+        """
+        self.crosshair = crosshair
         pass
 
     def start(self, faceTracker=None):
@@ -87,11 +92,7 @@ class BaseCamera(object):
         BaseCamera.event.wait()
         BaseCamera.event.clear()
 
-        frame = BaseCamera.frame
-        if tracking and BaseCamera.faceTracker != None:
-            frame = BaseCamera.trackingFrame
-
-        return frame
+        return self.current_frame(tracking)
 
     def current_frame(self, tracking=False):
         """Return the current camera frame immediately without wait """
@@ -99,6 +100,14 @@ class BaseCamera(object):
         frame = BaseCamera.frame
         if tracking and BaseCamera.faceTracker != None:
             frame = BaseCamera.trackingFrame
+        if self.crosshair:
+            # draw cross hair in the center
+            h, w, c = frame.shape
+            xc = (int)(w/2)
+            yc = (int)(h/2)
+            pix = 16
+            cv2.line(frame, (xc - pix, yc), (xc + pix, yc), (0, 255, 0), 1)
+            cv2.line(frame, (xc, yc - pix), (xc, yc + pix), (0, 255, 0), 1)
         return frame
 
     def current_trackingvalues(self):

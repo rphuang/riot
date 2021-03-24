@@ -19,9 +19,10 @@ class PiCarCamera(piIotNode.PiIotNode):
         width=config.getOrAddInt('camera.width', 640)
         height=config.getOrAddInt('camera.height', 480)
         enableFaceTracking = config.getOrAdd('camera.enableFaceTracking', 'true')
-        self.camera = camera_pi.Camera(width=width, height=height)
+        drawCrosshair = config.getOrAdd('camera.drawCrosshair', 'true')
+        self.camera = camera_pi.Camera(width=width, height=height, crosshair=drawCrosshair.startswith('true'))
         if enableFaceTracking.startswith('true'):
-            filePath = config.getOrAdd('camera.classifier', 'data/haarcascade_frontalface_alt.xml')
+            filePath = config.getOrAdd('camera.classifier', '/home/pi/src/picarServer/data/haarcascade_frontalface_alt.xml')
             self.classifier = cv2.CascadeClassifier(filePath)
             #self.classifier = cv2.CascadeClassifier('/home/pi/adeept_picar-b/server/data/haarcascade_frontalface_alt.xml')
             self.faceTracker = faceTracking.FaceTracker(self.classifier, debug=self.debug)

@@ -9,7 +9,7 @@ class Camera(BaseCamera):
     width = 1280
     height = 720
 
-    def __init__(self, width=1280, height=720):
+    def __init__(self, width=1280, height=720, crosshair=False):
         """ initialize a PiCam with specified width and height """
         Camera.width = width
         Camera.height = height
@@ -17,7 +17,7 @@ class Camera(BaseCamera):
         try:
             with picamera.PiCamera() as camera:
                 self.cameraReady = True
-                super(Camera, self).__init__()
+                super(Camera, self).__init__(crosshair=crosshair)
         except:
             timePrint("Failed to initialize picamera")
 

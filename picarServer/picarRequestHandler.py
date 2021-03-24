@@ -49,6 +49,8 @@ class PiCarRequestHandler(BaseRequestHandler):
             elif 'ledleft' in component:
                 value = self.commandHandler.drive.leftLed.rgb.toRGBStr()
                 response = { KeyPropertyKey: 'ledleft', KeyPropertyValue: value }
+            elif 'settings' in component:
+                response = self.commandHandler.car.config.settings
             elif 'ledstrip' in component:
                 httpStatusCode = 400
                 response = { KeyPropertyValue: 'NotYetSupported' }
@@ -77,6 +79,15 @@ class PiCarRequestHandler(BaseRequestHandler):
                 # for scan, the bodyDict contains strt end and inc for the scan
                 response = self.commandHandler.doScanCommand(bodyDict)
                 httpStatusCode = response.pop(KeyStatusCode, 400)
+            elif 'settings' in component:
+                config = self.commandHandler.car.config
+                oldAutoSave = config.autoSave
+                config.autoSave = False
+                for key, value in bodyDict.items():
+                    config.set(key, value)
+                config.Save(forceSave=True)
+                config.autoSave = oldAutoSave
+                response = { KeyResponse: 'Settings saved ' }
             else:
                 # process all the values in the body
                 httpStatusCode = 200

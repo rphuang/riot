@@ -13,15 +13,17 @@ class Config(object):
         self.settings = {}
         with open(filePath) as f:
             for line in f.readlines():
-                try:
-                    line = line.strip()  # strip possible trailing \n\r
-                    if line.startswith('#') or len(line) == 0:
-                        pass
-                    else:
-                        key, value = line.split('=')
+                line = line.strip()  # strip possible trailing \n\r
+                if line.startswith('#') or len(line) == 0:
+                    pass
+                else:
+                    index = line.find('=')
+                    if index > 1:
+                        key = line[0:index]
+                        value = line[index+1:]
                         self.settings[key] = value
-                except:
-                    print('Invalid setting: ' + line)
+                    else:
+                        print('Invalid setting: ' + line)
 
     def get(self, key):
         """ get the setting by key """

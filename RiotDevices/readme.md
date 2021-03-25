@@ -12,25 +12,28 @@ Features:
 * Video streaming via HTTP.
 
 # Setup
+We must setup both server and client.
 ## Setup the server on a Raspberry Pi.
-1. download/clone the respository - for example, install to /home/pi/riot
-2. Install the Python packages with pip3
+1. download/clone the respository. These steps assume that the code is under /home/pi/riot.
+2. Install the Python packages with pip3. This will install the Python packages required for PiCar Server.
 ```
-    cd /home/pi/riot
-    sudo pip3 install .
+cd /home/pi/riot
+sudo python3 pip3 install .
 ```
-3. Install and run PiCar server
-    1. create folders data & templates under /home/pi/riot/picarServer
-    2. copy files from /home/pi/riot/videoStreaming/data to /home/pi/riot/picarServer/data
-    3. copy files from /home/pi/riot/videoStreaming/templates to /home/pi/riot/picarServer/templates
-    4. adjust config file /home/pi/riot/picarServer/picarconfig.txt
-    5. run picar server
+3. Configure and run PiCar server. Please refer the the Configuration section in picarServer/readme.md for details. Command to run picar server
 ```
-        python3 /home/pi/riot/picarServer/server.py /home/pi/riot/picarServer/picarconfig.txt
+python3 /home/pi/riot/picarServer/server.py /home/pi/riot/picarServer/picarconfig.txt
 ```
-4. Install smart plug RIOT service (see readme.md in the folder for more)
-    1. copy this folder pySmartPlugService to the Raspberry Pi
-    2. install from https://github.com/vrachieru/tplink-smartplug-api. Alternatively, just download the code and copy the api.py to above folder and rename to tplink_smartplug.py
+4. Install and run smart plug RIOT service (see readme.md in the folder for more)
+    1. install from https://github.com/vrachieru/tplink-smartplug-api. Alternatively, just download the code and copy the api.py to /home/pi/riot/pySmartPlugService and rename to tplink_smartplug.py.
+    2. run smart plug service using one of these approaches
+        * run as stand alone service - refer to readme.md under pySmartPlugService
+        * run as part of piCarServer by adding the 2 lines to /home/pi/riot/picarServer/server.py as following
+```
+        picarHandler = PiCarRequestHandler(commandHandler, name='PiCar', authorizationList=authorizationList)
+        kasaHandler = KasaHs1xxRequestHandler(name='PiServerSmartPlugs', authorizationList=authorizationList)
+        kasaHandler.addSmartPlug('plug01', '192.168.1.85')  # replace 192.168.1.85 with the smart plug's IP address'
+```
 
 ## Setup Android app
 1. Build and deploy to Android phone with VS

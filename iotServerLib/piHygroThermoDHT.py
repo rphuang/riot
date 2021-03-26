@@ -35,7 +35,7 @@ class PiHygroThermoDHT(piIotNode.PiIotNode):
         """ start thread to read sensor every interval second the result is stored in instance variable humidity & temerature """
         timePrint('Starting DHT sensor thread ')
         self.thread = threading.Thread(target=self._readWorker, args=(interval, ))
-        self.thread.setDaemon(front)                            # 'True' for a front thread and would close when the mainloop() closes
+        self.thread.setDaemon(True)                            # 'True' for a front thread and would close when the mainloop() closes
         self.thread.start()
 
     def _readWorker(self, interval):

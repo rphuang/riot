@@ -20,7 +20,7 @@ namespace Devices.Services
             DiscoverService discoverService = DiscoverService.GetOrCreateService(serverAndPort, credential);
             SystemClient httpSystem = discoverService.GetClientNode<SystemClient>();
             PiCar picar = discoverService.GetClientNode<PiCar>();
-            picar.Server = httpSystem;
+            if (picar != null) picar.Server = httpSystem;
             return picar;
         }
 

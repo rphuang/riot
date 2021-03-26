@@ -4,6 +4,9 @@
 
 import time
 import traceback
+import requests
+import json
+import threading
 
 from piServices.piUtils import timePrint
 import picar
@@ -12,9 +15,9 @@ import picarHead
 import picarConst
 
 # constants for http status strings
-servoStatusMessage = ['TurnStraight', 'TurnLeft', 'TurnRight']
-cameraHorizontalStatusMessage = ['LookStraight', 'LookLeft', 'LookRight']
-cameraVerticalStatusMessage = ['LookStraight', 'LookDown', 'LookUp']
+servoStatusMessage = ['Go Straight', 'Go Left', 'Go Right']
+cameraHorizontalStatusMessage = ['Look Straight', 'Look Left', 'Look Right']
+cameraVerticalStatusMessage = ['Look Straight', 'Look Down', 'Look Up']
 
 class PiCarCommandHandler(object):
     """ handles commands for PiCar """
@@ -26,6 +29,16 @@ class PiCarCommandHandler(object):
         self.strip = car.strip
         self.leftLed = car.drive.leftLed
         self.rightLed = car.drive.rightLed
+        self.config = car.config
+        self.speechList = []
+        self.commandToSpeechAll = False
+        rawSpeechList = self.config.get('piCar.commandToSpeechList')
+        if len(rawSpeechList) > 0:
+            rawSpeechListLower = rawSpeechList.lower()
+            if rawSpeechListLower.startswith('all'):
+                self.commandToSpeechAll = True
+            else:
+                self.speechList = rawSpeechListLower.split(',')
 
     def doCommand(self, path, valueStr):
         """ execute the command specified by the path and value
@@ -41,7 +54,7 @@ class PiCarCommandHandler(object):
         - ledstrip: the strip led lights with full RGB colors and lightshows
         """
         pathLowerCase = path.lower()
-        httpStatus = 'BadRequest'
+        commandStatus = 'Bad Request'
         httpStatusCode = 400
         #print(' value: ' + valueStr)
         if valueStr != None:
@@ -51,29 +64,28 @@ class PiCarCommandHandler(object):
                 if 'motor' in pathLowerCase:
                     # motor speed range: -100 - 0 - +100 (in %)
                     value = int(valueStr)
-                    httpStatus = 'SetMotorSpeed'
                     if value == 0:
                         self.drive.stopMotor(turnOffLeds=True)
-                        httpStatus = 'MotorStop'
+                        commandStatus = 'Stop'
                     elif value < 0:
                         self.drive.backward(-value)
-                        httpStatus = 'MotorBackward'
+                        commandStatus = 'Backward'
                     else:
                         self.drive.forward(value)
-                        httpStatus = 'MotorForward'
+                        commandStatus = 'Forward'
                 elif 'servocamh' in pathLowerCase:
                     # servo angle range (in degree): -90 (max left) - 0 (straight) - +90 (max right)
                     value = self.head.moveHorizontal(int(valueStr))
-                    httpStatus = cameraHorizontalStatusMessage[getAngleStatus(value)]
+                    commandStatus = cameraHorizontalStatusMessage[getAngleStatus(value)]
                 elif 'servocamv' in pathLowerCase:
                     # servo angle range (in degree): -90 (max down) - 0 (straight) - +90 (max up)
                     value = self.head.moveVertical(int(valueStr))
-                    httpStatus = cameraVerticalStatusMessage[getAngleStatus(value)]
+                    commandStatus = cameraVerticalStatusMessage[getAngleStatus(value)]
                 elif 'servo' in pathLowerCase:
                     # servo angle range (in degree): -90 (max left) - 0 (straight) - +90 (max right)
                     # note that the turn_* functions have more restrictions for turning angles
                     value = self.drive.turnSteering(int(valueStr))
-                    httpStatus = servoStatusMessage[getAngleStatus(value)]
+                    commandStatus = servoStatusMessage[getAngleStatus(value)]
                 elif 'ledstrip' in pathLowerCase:
                     # stripled supports following values
                     # - off - stop lightshow
@@ -83,46 +95,49 @@ class PiCarCommandHandler(object):
                     # - color value in the format of "rrr, ggg, bbb" separated by comma
                     try:
                         self.car.setStrip(valueStr)
-                        httpStatus = 'SetLedStrip'
+                        commandStatus = 'Set Led Strip'
                     except:
                         print('Invalid LedStrip value: ' + valueStr)
-                        httpStatus = 'InvalidValue'
+                        commandStatus = 'Invalid Value'
                         httpStatusCode = 400
                 elif 'led' in pathLowerCase:
                     # for each color: 0 is off non-0 is on
                     if 'right' in pathLowerCase:
                         self.rightLed.setRGBStr(valueStr)
-                        httpStatus = 'RightLed'
+                        commandStatus = 'Right Led'
                     elif 'left' in pathLowerCase:
                         self.leftLed.setRGBStr(valueStr)
-                        httpStatus = 'LeftLed'
+                        commandStatus = 'Left Led'
                     else:
-                        httpStatus = 'UnknownDevice'
+                        commandStatus = 'Unknown Device'
                 elif 'scan' in pathLowerCase:
                     if len(valueStr) == 0:
                         # case: no parameter (empty valueStr) for scan the current distance is returned
                         distance = self.car.distance
-                        response = {'statusCode': 200, 'response': "Distance", 'device': pathLowerCase, 'value': [distance]}
-                        return response
+                        commandStatus = 'Get Distance'
                     else:
                         # case: valueStr contains the json body
                         bodyDict = json.loads(valueStr)
+                        commandStatus = 'Scan Distance'
                         fullResponse = self.doScanCommand(bodyDict)
                         return fullResponse
                 elif 'mode' in pathLowerCase:
                     # setting mode
                     self.doSetModeCommand(valueStr)
+                    commandStatus = 'Set Mode to %s' %valueStr
                 else:
-                    httpStatus = 'UnknownDeviceComponent'
+                    commandStatus = 'Unknown Device Component'
                     httpStatusCode = 400
             except Exception as e:
                 # todo: classify different exceptions and http status codes
                 print('Exception handling request: ' + str(e))
                 traceback.print_exc()
-                httpStatus = 'Exception'
+                commandStatus = 'Exception'
                 httpStatusCode = 400
 
-        response = {'statusCode': httpStatusCode, 'response': httpStatus, 'device': pathLowerCase, 'value': valueStr}
+        response = {'statusCode': httpStatusCode, 'response': commandStatus, 'device': pathLowerCase, 'value': valueStr}
+        self.commandToSpeech(commandStatus)
+            
         return response
 
     def doScanCommand(self, bodyDict):
@@ -134,6 +149,7 @@ class PiCarCommandHandler(object):
         - posh: an array of horizontal position
         - posv: an array of vrtical position
         """
+        self.commandToSpeech('Start Scan')
         value = []
         posh = []
         posv = []
@@ -169,6 +185,26 @@ class PiCarCommandHandler(object):
         else:
             return {'statusCode': 400, 'response': 'InvalidMode', 'value': valueStr}
         return {'statusCode': 200, 'response': 'SetMode', 'value': valueStr}
+
+    def commandToSpeech(self, commandStatus):
+        """ spin a thread to send commandStatus to CommandToSpeech service """
+        thread = threading.Thread(target=self._commandToSpeechAsync, args=(commandStatus, ))
+        thread.setDaemon(True)                            # 'True' for a front thread and would close when the mainloop() closes
+        thread.start()
+
+    def _commandToSpeechAsync(self, commandStatus):
+        """ send commandStatus to CommandToSpeech service """
+        speechMode = self.config.getOrAdd('piCar.commandToSpeechMode', 'no')
+        if 'yes' in speechMode.lower():
+            if self.commandToSpeechAll or commandStatus.lower() in self.speechList:
+                speakService =  self.config.get('piCar.commandToSpeechService')
+                credential =  self.config.get('piCar.commandToSpeechCredential')
+                auth = None
+                if len(credential) > 0:
+                    user, password = credential.split(':')
+                    auth=(user, password)
+                r = requests.post(speakService, data = json.dumps({'text': commandStatus}), auth=auth)
+                timePrint('Send command to speech %s' %commandStatus)
 
 def getFromDict(dict, key, default):
     """ get value by key

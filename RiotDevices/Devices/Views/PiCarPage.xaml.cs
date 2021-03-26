@@ -3,6 +3,7 @@ using Devices.Services;
 using Riot.IoDevice;
 using Riot.IoDevice.Client;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -21,19 +22,17 @@ namespace Devices.Views
 
         protected override void OnAppearing()
         {
-            if (_initialized)
+            if (Initialize())
             {
                 webView.Source = _piCar.VideoStreamUrl;
-                return;
+                if (_phoneServiceRequested) StartPhoneService();
             }
-
-            InitializePiCar();
-            _initialized = true;
         }
 
         protected override void OnDisappearing()
         {
             webView.Source = null;
+            StopPhoneService();
         }
 
         private bool _initialized;
@@ -41,6 +40,10 @@ namespace Devices.Views
 
         private ControlTopic _controlTopic;
         private PiCar _piCar;
+        private AppServiceHost _host;
+        private bool _phoneServiceRequested;
+        private bool _phoneServiceStarted;
+        private string _jsonForEnableCommandToSpeech;
 
         private LedLightShow _stripledSequence = LedLightShow.ledAllOFF;
         private LedState _rightLed;
@@ -58,22 +61,76 @@ namespace Devices.Views
         }
         private ClientTab _tab = ClientTab.DriveTab;
 
-        private void InitializePiCar()
+        private void StartPhoneService()
         {
-            try
+            ServiceOnOffButton.Text = "S.Off";
+            _phoneServiceStarted = true;
+            _host.Start();
+            _host.ProcessRequestsAsync(null);
+            if (_jsonForEnableCommandToSpeech == null)
             {
-                _piCar = PiCarClientFactory.CreatePiCar(_controlTopic.Server, _controlTopic.Credential);
-                _piCar.Initialize(_controlTopic.ServerAddress, _controlTopic.VideoPort);
-                _cameraHorizontalServo = new ServoStat { Servo = _piCar.HeadHorizontalServo };
-                _cameraVertialServo = new ServoStat { Servo = _piCar.HeadVerticalServo };
-                _rightLed = new LedState { Led = _piCar.RightLed };
-                _leftLed = new LedState { Led = _piCar.LeftLed };
-                webView.Source = _piCar.VideoStreamUrl;
+                string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
+                var entry = Dns.GetHostEntry(hostName);
+                string myIP = entry.AddressList[0].ToString();
+                string port = _host.GetServicePort();
+                _jsonForEnableCommandToSpeech = $"{{\"piCar.commandToSpeechMode\": \"yes\", \"piCar.commandToSpeechService\": \"http://{myIP}{port}/cmd/speak\"}}";
             }
-            catch (Exception err)
+            _piCar.PostSetting(_jsonForEnableCommandToSpeech);
+        }
+
+        private void StopPhoneService()
+        {
+            ServiceOnOffButton.Text = "S.On";
+            if (_phoneServiceStarted)
             {
-                responseLabel.Text = "Failed to initialize PiCar \n" + err.ToString();
+                _phoneServiceStarted = false;
+                _host?.QuitProcessRequests();
+                // stop CommandToSpeech
+                _piCar.PostSetting("piCar.commandToSpeechMode", "no");
             }
+        }
+
+        private bool Initialize()
+        {
+            if (!_initialized)
+            {
+                try
+                {
+                    // initialize PiCar
+                    _piCar = PiCarClientFactory.CreatePiCar(_controlTopic.Server, _controlTopic.Credential);
+                    if (_piCar != null)
+                    {
+                        _piCar.Initialize(_controlTopic.ServerAddress, _controlTopic.VideoPort);
+                        _cameraHorizontalServo = new ServoStat { Servo = _piCar.HeadHorizontalServo };
+                        _cameraVertialServo = new ServoStat { Servo = _piCar.HeadVerticalServo };
+                        _rightLed = new LedState { Led = _piCar.RightLed };
+                        _leftLed = new LedState { Led = _piCar.LeftLed };
+                        // initialize AppServiceHost
+                        DeviceSettings settings = DeviceSettings.Instance;
+                        _host = new AppServiceHost(settings.ServerPrefix, settings.ServiceRootPath, settings.ServiceActionRootPath, settings.ServiceCredentials);
+                        _host.Init();
+
+                        _initialized = true;
+                    }
+                }
+                catch (Exception err)
+                {
+                    responseLabel.Text = "Failed to initialize PiCar \n" + err.ToString();
+                }
+            }
+            if (_initialized)
+            {
+                CommandButton.IsEnabled = true;
+                GpioButton.IsEnabled = true;
+                ServiceOnOffButton.IsEnabled = true;
+            }
+            else
+            {
+                CommandButton.IsEnabled = false;
+                GpioButton.IsEnabled = false;
+                ServiceOnOffButton.IsEnabled = false;
+            }
+            return _initialized;
         }
 
         private void DisplayLightStatus()
@@ -303,6 +360,20 @@ namespace Devices.Views
         async private void GpioButton_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushModalAsync(new NavigationPage(new GpioPage(_controlTopic)));
+        }
+
+        private void ServiceOnOffButton_Clicked(object sender, EventArgs e)
+        {
+            if (_phoneServiceStarted)
+            {
+                StopPhoneService();
+                _phoneServiceRequested = false;
+            }
+            else
+            {
+                StartPhoneService();
+                _phoneServiceRequested = true;
+            }
         }
 
         async private void EditButton_Clicked(object sender, EventArgs e)

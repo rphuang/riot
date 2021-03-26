@@ -85,7 +85,7 @@ class PiCarRequestHandler(BaseRequestHandler):
                 config.autoSave = False
                 for key, value in bodyDict.items():
                     config.set(key, value)
-                config.Save(forceSave=True)
+                config.save(forceSave=True)
                 config.autoSave = oldAutoSave
                 response = { KeyResponse: 'Settings saved ' }
             else:

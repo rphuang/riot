@@ -1,4 +1,5 @@
 ﻿using Devices.Models;
+using Devices.Services;
 using HttpLib;
 using Riot;
 using Riot.Phone.Service;
@@ -12,7 +13,7 @@ using Xamarin.Forms.Xaml;
 namespace Devices.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PhoneServicePage : ContentPage // BasePage
+    public partial class PhoneServicePage : ContentPage, IResponseHandler // BasePage
     {
         public PhoneServicePage()
         {
@@ -20,12 +21,9 @@ namespace Devices.Views
             Title = "Phone Service";
         }
 
-        private PhoneServiceHost _host;
+        private AppServiceHost _host;
         private bool _initialized;
         private bool _active;
-        private string _port;
-        private IotHttpClient _client;
-        private static readonly char[] CommaDelimiter = { ',' };
 
         protected override void OnAppearing()
         {
@@ -36,8 +34,7 @@ namespace Devices.Views
 
         protected override void OnDisappearing()
         {
-            // todo: impl stop
-            //Stop();
+            Stop();
         }
 
         private void Initialize()
@@ -45,7 +42,7 @@ namespace Devices.Views
             if (_initialized) return;
 
             DeviceSettings settings = DeviceSettings.Instance;
-            _host = new PhoneServiceHost(settings.ServerPrefix, settings.ServiceRootPath, settings.ServiceActionRootPath, settings.ServiceCredentials);
+            _host = new AppServiceHost(settings.ServerPrefix, settings.ServiceRootPath, settings.ServiceActionRootPath, settings.ServiceCredentials);
             DisplayIpAddress();
             _host.Init();
             _initialized = true;
@@ -56,54 +53,39 @@ namespace Devices.Views
             Initialize();
             _active = true;
             StartStopButton.Text = "Stop";
-            // todo: enable stop when host support timeout
-            StartStopButton.IsEnabled = false;
             string lsv = string.Join("\n", _host.Prefixes);
             TextLabel.Text = $"HttpHost started at {DateTime.Now} listening:\n{lsv}";
             _host.Start();
-            GetContextAsync();
+            _host.ProcessRequestsAsync(this);
             ProcessActionAsync();
         }
 
         private void Stop()
         {
             _active = false;
-            _host.Stop();
+            _host.QuitProcessRequests();
             StartStopButton.Text = "Start";
-            TextLabel.Text = $"HttpHost stopped at {DateTime.Now} \n";
+            //TextLabel.Text = $"HttpHost stopped at {DateTime.Now} \n";
         }
 
-        private async void GetContextAsync()
+        /// <summary>
+        /// display the response after a request
+        /// </summary>
+        void IResponseHandler.Process(HttpServiceResponse hostResponse)
         {
-            while (_active)
+            if (hostResponse != null)
             {
-                HttpServiceResponse hostResponse = null;
-                await Task.Run(async () =>
+                HttpListenerRequest request = hostResponse.Request;
+                HttpListenerResponse response = hostResponse.Response;
+                if (hostResponse.Success)
                 {
-                    try
-                    {
-                        hostResponse = await _host.GetContextAsync();
-                    }
-                    catch (Exception err)
-                    {
-                    }
-                }).ConfigureAwait(true);
-
-                if (hostResponse != null)
+                    TextLabel.Text = $"{request.HttpMethod} {request.Url.AbsoluteUri} Status: {response.StatusCode} Result:\n{hostResponse.Content}";
+                }
+                else
                 {
-                    HttpListenerRequest request = hostResponse.Request;
-                    HttpListenerResponse response = hostResponse.Response;
-                    if (hostResponse.Success)
-                    {
-                        TextLabel.Text = $"{request.HttpMethod} {request.Url.AbsoluteUri} Status: {response.StatusCode} Result:\n{hostResponse.Content}";
-                    }
-                    else
-                    {
-                        TextLabel.Text = $"{request.HttpMethod} {request.Url.AbsoluteUri} Status: {response.StatusCode} Result:\n{hostResponse.Content}\n Error:{hostResponse.ErrorMessage}";
-                    }
+                    TextLabel.Text = $"{request.HttpMethod} {request.Url.AbsoluteUri} Status: {response.StatusCode} Result:\n{hostResponse.Content}\n Error:{hostResponse.ErrorMessage}";
                 }
             }
-            _host.Stop();
         }
 
         private async void ProcessActionAsync()
@@ -162,22 +144,7 @@ namespace Devices.Views
                     json = result.Substring(index + 1);
                 }
 
-                if (_client == null)
-                {
-                    DeviceSettings settings = DeviceSettings.Instance;
-                    index = settings.ServerPrefix.IndexOf(':', 6);  // skip http: or https:
-                    if (index > 1) _port = settings.ServerPrefix.Substring(index);
-                    else _port = string.Empty;
-                    string credential = settings.ServiceCredentials;
-                    if (!string.IsNullOrEmpty(credential))
-                    {
-                        string[] parts = credential.Split(CommaDelimiter);
-                        credential = parts[0];
-                    }
-                    _client = new IotHttpClient($"localhost{_port}", credential);
-                }
-                if (string.IsNullOrEmpty(json)) _client.GetResponse(path);
-                else _client.Post(path, json);
+                _host.SendSelfRequest(path, json);
             }
         }
     }

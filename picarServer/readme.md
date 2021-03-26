@@ -5,8 +5,10 @@ This is a server module that controls the Adeept PiCar-B. Besides controling wit
 * Backward compatible with the TCP client that was provided by Adeept (Version 1.1)
 * HTTP web service that allows client to retrieve and control PiCar
 * HTTP web service that streams the video output from the PiCar camera with face tracking
-* HTTP web service that allows client to access the Raspberry Pi system
+* HTTP web service that allows client to access the cpu/memory status for the hosting Raspberry Pi system
+* Seding commands to Raspberry Pi, for example, reboot and shutdown
 * Simple Dev-ish Android client app that controls the PiCar with live video stream
+* Send command to speech to Android phone that runs the client app
 
 ## Installation
 1. download/clone the respository. These steps assume that the code is under /home/pi/riot.
@@ -112,3 +114,25 @@ This is to configure the IO pins and channels for the PiCar. Most likely, you do
 * lineTracking.rightPin=35
 ### Configure the TCP port
 * tcpserver.tcpPort=10223
+
+## Feature Thoughts
+* SmartMotor - control the speed during start/stop and other conditions
+* SmartDrive - control the overall speed and direction and use other sensors, such as ultrasonic, to avoid obstacles or adjust speed/direction
+* Outdoor Scenario - use Raspberry Pi to create WiFi hotspot so it can be run in outdoor that has no WiFi
+* Outdoor Scenarios with phone sensor service
+    * WiFi hotspot from Raspberry Pi
+    * Attach a phone to PiCar and provide phone sensor service
+    * Scenarios
+        * provide PiCar location
+        * provide PiCar speed and heading
+        * control Picar to automatically move to a specific GPS location
+* Home base scenarios
+    * WiFi hotspot from Raspberry Pi
+    * Attach a phone to PiCar and provide phone sensor service
+    * Enable phone sensor service on the controller as "home"
+    * Scenarios
+        * findout distance between home and PiCar
+        * ask PiCar to return to home base automatically
+        * follow the controller or keep the same formation (distance and direction)
+        * circle around the home base
+

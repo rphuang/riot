@@ -69,6 +69,16 @@ namespace Devices.Views
             _hygroThermoSensor = _discoverService.GetClientNode<HygroThermoSensorClient>();
             _initialized = _piSystem != null;
             _failedInit = _piSystem == null;
+            if (_initialized)
+            {
+                CommandButton.IsEnabled = true;
+                GpioButton.IsEnabled = true;
+            }
+            else
+            {
+                CommandButton.IsEnabled = false;
+                GpioButton.IsEnabled = false;
+            }
         }
 
         private async void UpdateDisplayAsync()

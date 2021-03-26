@@ -158,6 +158,25 @@ namespace Devices.Services
             return PostPiCarCommand(json);
         }
 
+        /// <summary>
+        /// post http request to save setting
+        /// </summary>
+        /// <returns></returns>
+        public string PostSetting(string json)
+        {
+            return Client.Post($"{Id}/settings", json);
+        }
+
+        /// <summary>
+        /// post http request to save a setting
+        /// </summary>
+        /// <returns></returns>
+        public string PostSetting(string key, string value)
+        {
+            string json = $"{{\"{key}\": \"{value}\"}}";
+            return Client.Post($"{Id}/settings", json);
+        }
+
         public string VideoStreamUrl { get; set; }
 
         /// <summary>

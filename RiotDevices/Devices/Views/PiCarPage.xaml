@@ -6,9 +6,10 @@
              mc:Ignorable="d"
              x:Class="Devices.Views.PiCarPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Cmd" Clicked="CommandButton_Clicked" />
+        <ToolbarItem x:Name="ServiceOnOffButton" Text="S.On" Clicked="ServiceOnOffButton_Clicked" />
+        <ToolbarItem x:Name="CommandButton" Text="Cmd" Clicked="CommandButton_Clicked" />
         <ToolbarItem Text="Edit" Clicked="EditButton_Clicked" />
-        <ToolbarItem Text="Gpio" Clicked="GpioButton_Clicked" />
+        <ToolbarItem x:Name="GpioButton" Text="Gpio" Clicked="GpioButton_Clicked" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <Style TargetType="Button"

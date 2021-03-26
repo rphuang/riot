@@ -66,9 +66,9 @@ namespace Riot.Phone.Service
             base.Stop();
         }
 
-        private string _rootPath;
-        private string _actionRootPath;
-        private string _credentials;
-        private PhoneService _phoneService;
+        protected string _rootPath;
+        protected string _actionRootPath;
+        protected string _credentials;
+        protected PhoneService _phoneService;
     }
 }

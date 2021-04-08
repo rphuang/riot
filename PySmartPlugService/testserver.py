@@ -51,7 +51,7 @@ if __name__ == '__main__':
     kasaHandler.addSmartPlug('plug02', '192.168.1.86')
 
     try:
-        app.run(host='0.0.0.0', port=port, debug = True, threaded=True, use_reloader=True)
+        app.run(host='0.0.0.0', port=port, debug = True, threaded=True, use_reloader=False)
     except KeyboardInterrupt:
         timePrint("PiServer stopped")
 

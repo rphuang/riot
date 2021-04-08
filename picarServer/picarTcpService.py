@@ -49,11 +49,12 @@ def scan(commandHandler, starth, startv, endh, endv, inch, incv):               
         dis_dir.append(str(val))
     return dis_dir
 
+ap_status = 1       # 0 to enable hotspot
 wifi_status = 0     # wifi status
 data = ''           # data buffer received from socket
 
 def run(commandHandler, config):               #Main loop for tcp service
-    global wifi_status, data
+    global ap_status, wifi_status, data
 
     # load configuration
     motor_speed = config.getOrAddInt('tcpserver.motorSpeed', 100)

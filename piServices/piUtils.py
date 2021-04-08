@@ -2,6 +2,7 @@
 # File name   : piUtils.py
 # Description : utility module for pi
 
+import threading
 from datetime import datetime
 
 def timePrint(msg):
@@ -17,4 +18,12 @@ def splitAndTrim(string, delimiter):
             continue
         results.append(item)
     return results
+
+def startThread(context, target, front=True, args=()):
+    """ start a thread to run the specified target function """
+    timePrint('Starting thread: ' + context)
+    thread = threading.Thread(target=target, args=args)
+    thread.setDaemon(front)                            # 'True' for a front thread and would close when the mainloop() closes
+    thread.start()
+    return thread
 

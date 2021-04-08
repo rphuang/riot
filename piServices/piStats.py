@@ -2,9 +2,11 @@
 # File name : piStats.py
 # Description : Pi status class
 import re
-import time
+from time import sleep
+import os
 import sys
 import subprocess
+from datetime import datetime, timedelta
 from piServices.piConstants import *
 from piServices.piUtils import *
 
@@ -132,14 +134,16 @@ class PiStats(object):
         value = newValues[index] - lastValues[index]
         return round(float(value) / float(cpuTotal), 3) * 100.00 
 
-    def updateStatusForever(self, delay_second):
+    def updateStatusForever(self, delay_second, logFile=None):
         """ update cpu usage data for every delay_second
         """
         timePrint("PiStats updating status every " + str(delay_second) + " second")
         initValues = [0, 0, 0, 0, 0]
         self.lastCpuData = { 'cpu': initValues, 'cpu0': initValues, 'cpu1': initValues, 'cpu2': initValues, 'cpu3': initValues} 
+        self.logError = False
         while True:
             with open('/proc/stat', 'r') as cpu_file:
+                timestamp = datetime.now()
                 coresResponse = {}
                 for i, line in enumerate(cpu_file):
                     if 'cpu' in line:
@@ -155,7 +159,8 @@ class PiStats(object):
                                        KeyCpuSystemUsageProperty: cpuSystemPercent, KeyCpuIdleProperty: cpuIdlePercent}}
                         if i == 0:
                             allCpuResponse = cpuResponse
-                            #timePrint(str(cpuResponse))
+                            if logFile != None:
+                                self._logCpuStats(logFile, timestamp, cpuActivePercent, cpuUserPercent, cpuSystemPercent, cpuIdlePercent, delay_second)
                         else:
                             coresResponse.update(cpuResponse)
                         self.lastCpuData.update({cpuName: cpuValues})
@@ -166,6 +171,19 @@ class PiStats(object):
             self.cpuStatsWithoutCores.update(allCpuResponse[KeyComponentCpu])
             allCpuResponse[KeyComponentCpu].update({KeyCoresProperty: coresResponse})
             self.cpuStatsWithCores = allCpuResponse[KeyComponentCpu]
-            #timePrint("PiStats updated")
-            time.sleep(delay_second)
+
+            sleep(delay_second)
+
+    def _logCpuStats(self, logFile, timestamp, cpuActivePercent, cpuUserPercent, cpuSystemPercent, cpuIdlePercent, delay_second):
+        """ log cpu stats to file """
+        filePath = '%s.%s.log' %(logFile, timestamp.strftime('%Y-%m%d'))
+        try:
+            with open(filePath, "a") as f:
+                f.write('{},{:.2f},{:.2f},{:.2f},{:.2f}\n'.format(str(timestamp), cpuActivePercent, cpuUserPercent, cpuSystemPercent, cpuIdlePercent))
+            self.logError = False
+        except Exception as e:
+            if not self.logError:
+                timePrint('_logCpuStats exception: ' + str(e))
+                self.logError = True
+
 

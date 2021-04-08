@@ -7,7 +7,7 @@ import threading
 
 from iotServerLib import piStripLed, piIotNode, piLineTracking
 from iotServerLib.iotCommon import ON, OFF, RGB
-from piServices.piUtils import timePrint
+from piServices.piUtils import timePrint, startThread
 import picarDrive
 import picarHead
 import picarConst
@@ -16,14 +16,6 @@ import picarConst
 DistanceToFollow  = 0.4
 MaxFollowDistance = 2
 
-
-def startThread(context, target, front=True):
-    """ start a thread to run the specified target function """
-    timePrint('Starting thread: ' + context)
-    thread = threading.Thread(target=target)
-    thread.setDaemon(front)                            # 'True' for a front thread and would close when the mainloop() closes
-    thread.start()
-    return thread
 
 class PiCar(piIotNode.PiIotNode):
     """ encapsulate an Adeept Robotic PiCar """
@@ -46,7 +38,7 @@ class PiCar(piIotNode.PiIotNode):
         # modes initialization
         self._resetModes()
         # start threads for picar
-        self.ws2812Thread=startThread('ws2812', target=self._ws2812Worker)        # thread for stripled lights (ws_2812 leds)
+        self.ws2812Thread=startThread('ws2812', target=self._ws2812Worker)                  # thread for stripled lights (ws_2812 leds)
         self.scanThread=startThread('DistanceScan', target=self._distanceScanWorker)        # thread for distance scan (ultrasonic)
         self.httpvideoThread=startThread('HttpVideoStream', target=self._httpVideoWorker)   # thread for http video streaming (flask)
         self.modeThread=startThread('ModeManager', target=self._modeWorker)                 # thread for managing PiCar operation modes
@@ -151,12 +143,31 @@ class PiCar(piIotNode.PiIotNode):
         """ internal thread for video streaming """
         self.head.camera.httpVideoStreaming(self.httpVideoPort)
 
-    def _distanceScanWorker(self, interval=0.2):
+    def _distanceScanWorker(self):
         """ internal thread for measuring distance at specified interval """
+        interval = self.config.getOrAddFloat('distanceScan.scanCycleInSecond', 0.3)             # delay interval for the worker
+        stopDistance = self.config.getOrAddFloat('distanceScan.stopDistanceInMeter', 0.2)       # the distance to stop forward movement
+        slowDistance = self.config.getOrAddFloat('distanceScan.slowDistanceInMeter', 1.0)       # the distance to stop forward movement
+        headingAngleLimit = self.config.getOrAddInt('distanceScan.headingAngleLimit', 20)       # the angle limit considered as measuring straight ahead
         while True:
-            while self.distanceScan:
+            slowdown = 0
+            if self.distanceScan and not self.head.scanning:
                 self.distance = self.head.ultrasonic.pingDistance()
-                time.sleep(interval)
+                # check distance to stop drive
+                if stopDistance > 0 and self.distance > 0:
+                    # check heading and forward (speed > 0) before stopping
+                    hAngle, vAngle = self.head.heading
+                    if abs(hAngle) < headingAngleLimit and abs(vAngle) < headingAngleLimit and self.drive.motor.speed > 0:
+                        if self.distance < stopDistance:
+                            timePrint('Stopping drive at distance: %f' %self.distance)
+                            self.drive.stop()
+                            self.drive.extraSpeed(0)
+                        elif self.distance < slowDistance:
+                            slowdown = -int(20 * (slowDistance - self.distance) / (slowDistance - stopDistance))
+                            timePrint('Slowing down %i at distance: %f' %(slowdown, self.distance))
+
+            self.drive.extraSpeed(slowdown)
+
             time.sleep(interval)
 
     def _modeWorker(self, interval=0.2):

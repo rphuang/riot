@@ -6,21 +6,22 @@ import os
 import threading
 import tempfile
 from piServices.piConstants import *
-from piServices.piUtils import timePrint
+from piServices.piUtils import timePrint, startThread
 from piServices.piStats import PiStats
 from piServices.flaskUtil import makeJsonResponse
 from piServices.baseRequestHandler import BaseRequestHandler
 
 class PiSysRequestHandler(BaseRequestHandler):
     """ PiSysRequestHandler is the request handler for Pi system resources """
-    def __init__(self, name='PiSystem', rootPaths=['sys', 'system'], authorizationList=None):
+    def __init__(self, name='PiSystem', rootPaths=['sys', 'system'], authorizationList=None, logFile=None):
         """ constructor for PiSysRequestHandler 
         name: the name for the handler
         rootPaths: list of root paths that will be handled by the instance
         authorizationList: a list of strings for authorized users
+        logFile: file to log cpu stats
         """
         super(PiSysRequestHandler, self).__init__(name=name, type='PiSystem', rootPaths=rootPaths, authorizationList=authorizationList)
-        self._startUp()
+        self._startUp(logFile)
 
     def doGet(self, request):
         """ handle GET request for Pi system resources
@@ -74,16 +75,13 @@ class PiSysRequestHandler(BaseRequestHandler):
             response.append(itemResponse)
         return makeJsonResponse(httpStatusCode, response)
 
-    def _startUp(self):
+    def _startUp(self, logFile=None):
         """ internal method to startup the handler:
         - create an instance of PiStats
         - create a thread to run PiStats's updateStatusForever() that updates CPU usage every 1.0 second
         """
-        timePrint('Starting thread for PiStats.updateStatusForever()')
         self.pistats = PiStats()
-        stats_thread=threading.Thread(target=self.pistats.updateStatusForever, args=(1.0,)) 
-        stats_thread.setDaemon(True)                              #'True' means it is a front thread,it would close when the mainloop() closes
-        stats_thread.start()                                      #Thread starts
+        startThread('PiStats.updateStatusForever', target=self.pistats.updateStatusForever, front=True, args=(1.0, logFile))
 
 
 

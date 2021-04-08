@@ -44,7 +44,7 @@ if __name__ == '__main__':
     dhtHandler = PiHygroThermoRequestHandler(pin=11, authorizationList=None)
 
     try:
-        app.run(host='0.0.0.0', port=port, debug = True, threaded=True, use_reloader=True)
+        app.run(host='0.0.0.0', port=port, debug = True, threaded=True, use_reloader=False)
     except KeyboardInterrupt:
         timePrint("PiServer stopped")
 

@@ -30,6 +30,7 @@ class PiCarCommandHandler(object):
         self.leftLed = car.drive.leftLed
         self.rightLed = car.drive.rightLed
         self.config = car.config
+        self.commandToSpeechErrorCount = 0
         self.speechList = []
         self.commandToSpeechAll = False
         rawSpeechList = self.config.get('piCar.commandToSpeechList')
@@ -194,8 +195,8 @@ class PiCarCommandHandler(object):
 
     def _commandToSpeechAsync(self, commandStatus):
         """ send commandStatus to CommandToSpeech service """
-        speechMode = self.config.getOrAdd('piCar.commandToSpeechMode', 'no')
-        if 'yes' in speechMode.lower():
+        speechMode = self.config.getOrAdd('piCar.commandToSpeechMode', 'off')
+        if 'on' in speechMode.lower() and self.commandToSpeechErrorCount < 3:
             if self.commandToSpeechAll or commandStatus.lower() in self.speechList:
                 speakService =  self.config.get('piCar.commandToSpeechService')
                 credential =  self.config.get('piCar.commandToSpeechCredential')
@@ -203,8 +204,16 @@ class PiCarCommandHandler(object):
                 if len(credential) > 0:
                     user, password = credential.split(':')
                     auth=(user, password)
-                r = requests.post(speakService, data = json.dumps({'text': commandStatus}), auth=auth)
-                timePrint('Send command to speech %s' %commandStatus)
+                try:
+                    r = requests.post(speakService, data = json.dumps({'text': commandStatus}), auth=auth)
+                    timePrint('Send command to speech %s' %commandStatus)
+                    self.commandToSpeechErrorCount = 0
+                except Exception as e:
+                    print('Exception command to speech %s: %s' %(commandStatus, str(e)))
+                    self.commandToSpeechErrorCount += 1
+        else:
+            # clear error count if commandToSpeechMode is off
+            self.commandToSpeechErrorCount = 0
 
 def getFromDict(dict, key, default):
     """ get value by key

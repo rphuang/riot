@@ -33,6 +33,7 @@ class PiCarHead(piIotNode.PiIotNode):
         self.maxUpAngle = max(self.servoV.minAngle, self.servoV.maxAngle)
         self.camera = PiCarCamera('Camera', self, config, debug=True)
         self.scanning = False   # flag indicating ultrasonic scan is in progress
+        self.heading = (self.servoH.angle, self.servoV.angle)   # direction (horizontalAngle, verticalAngle)
 
     def stop(self):
         """ stop - just move to straight for both servos """
@@ -44,7 +45,9 @@ class PiCarHead(piIotNode.PiIotNode):
         however, this angle will be clamped to the physical limitation.
         the method return the achieved angle position.
         """
-        return self.servoH.moveToAngle(angle)
+        val = self.servoH.moveToAngle(angle)
+        self.heading = (self.servoH.angle, self.servoV.angle)
+        return val
 
     def moveVertical(self, angle):
         """ turn the camera vertically to the specified angle
@@ -52,12 +55,15 @@ class PiCarHead(piIotNode.PiIotNode):
         however, this angle will be clamped to the physical limitation.
         the method return the achieved angle position.
         """
-        return self.servoV.moveToAngle(angle)
+        val = self.servoV.moveToAngle(angle)
+        self.heading = (self.servoH.angle, self.servoV.angle)
+        return val
 
     def lookStraight(self):
         """ point the head to straight """
         self.servoH.moveToCenter()
         self.servoV.moveToCenter()
+        self.heading = (self.servoH.angle, self.servoV.angle)
 
     def scan(self, starth, startv, endh, endv, inch, incv, delay=0.2):
         """ perform distance scan with inputs

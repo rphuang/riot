@@ -42,6 +42,10 @@ class Config(object):
         """ get the integer setting by key, add a new key with defaultValue if no key """
         return int(self.getOrAdd(key, defaultValue))
 
+    def getOrAddFloat(self, key, defaultValue):
+        """ get the float setting by key, add a new key with defaultValue if no key """
+        return float(self.getOrAdd(key, defaultValue))
+
     def set(self, key, value):
         """ update/add the setting value by key """
         self.settings[key] = value

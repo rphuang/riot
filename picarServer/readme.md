@@ -9,6 +9,7 @@ This is a server module that controls the Adeept PiCar-B. Besides controling wit
 * Seding commands to Raspberry Pi, for example, reboot and shutdown
 * Simple Dev-ish Android client app that controls the PiCar with live video stream
 * Send command to speech to Android phone that runs the client app
+* Smart motor and drive control - control the speed during start and use ultrasonic to avoid obstacles when heading straight
 
 ## Installation
 1. download/clone the respository. These steps assume that the code is under /home/pi/riot.
@@ -116,8 +117,6 @@ This is to configure the IO pins and channels for the PiCar. Most likely, you do
 * tcpserver.tcpPort=10223
 
 ## Feature Thoughts
-* SmartMotor - control the speed during start/stop and other conditions
-* SmartDrive - control the overall speed and direction and use other sensors, such as ultrasonic, to avoid obstacles or adjust speed/direction
 * Outdoor Scenario - use Raspberry Pi to create WiFi hotspot so it can be run in outdoor that has no WiFi
 * Outdoor Scenarios with phone sensor service
     * WiFi hotspot from Raspberry Pi

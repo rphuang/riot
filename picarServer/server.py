@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
         authorizationList = picarConfig.getOrAdd('piCar.AuthorizationList', '')
         # create proper RequestHandlers
-        sysHandler = PiSysRequestHandler(name='PiCarSystem', authorizationList=authorizationList)
+        sysHandler = PiSysRequestHandler(name='PiCarSystem', authorizationList=authorizationList, logFile='/var/log/cpustats')
         gpioHandler = PiGpioRequestHandler(name='PiCarGpio', authorizationList=authorizationList)
         picarHandler = PiCarRequestHandler(commandHandler, name='PiCar', authorizationList=authorizationList)
 

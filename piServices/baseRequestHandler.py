@@ -31,6 +31,9 @@ class BaseRequestHandler(object):
         # register the handler
         with BaseRequestHandler._lock:
             for key in rootPaths:
+                if key in BaseRequestHandler._handlers:
+                    raise Exception('RequestHandler with the same rootPath: %s' %key)
+
                 BaseRequestHandler._handlers[key.lower()] = self
         timePrint('Registered RequestHandler: %s rootPaths: %s' %(self.name, str(rootPaths)))
 

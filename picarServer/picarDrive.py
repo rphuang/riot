@@ -11,11 +11,14 @@ class PiCarDrive(piIotNode.PiIotNode):
         """ construct a PiCarDrive """
         super(PiCarDrive, self).__init__(name, parent)
         self.motor = piDcMotor.PiDcMotor('drive', self, enable=config.getOrAddInt('motor.enable', 7),
-                                        in1=config.getOrAddInt('motor.in1', 10), in2=config.getOrAddInt('motor.in2', 8))
+                                        in1=config.getOrAddInt('motor.in1', 10), in2=config.getOrAddInt('motor.in2', 8),
+                                        threadCycle=config.getOrAddFloat('motor.threadCycleInSecond', 0.2),
+                                        deltaSpeedPerCycle=config.getOrAddInt('motor.deltaSpeedPerCycle', 5))
         self.steering = piServoI2c.PiServoI2c('Steering', self, channel=config.getOrAddInt('steering.channel', 2),
                                              min=config.getOrAddInt('steering.min', 200), max=config.getOrAddInt('steering.max', 510),
                                              minAngle=config.getOrAddInt('steering.minAngle', 45), maxAngle=config.getOrAddInt('steering.maxAngle', -30),
                                              centerAngle=config.getOrAddInt('steering.centerAngle', 0))
+        self.extraSpeedOnSteering = config.getOrAddInt('steering.extraSpeed', 20)
         self.maxLeftAngle = min(self.steering.minAngle, self.steering.maxAngle)
         self.maxRightAngle = max(self.steering.minAngle, self.steering.maxAngle)
         self.leftLed = piRGBLed.PiRGBLed('Left LED', self, config.getOrAddInt('leftLED.redPin', 15), config.getOrAddInt('leftLED.greenPin', 16), config.getOrAddInt('leftLED.bluePin', 18))
@@ -51,6 +54,10 @@ class PiCarDrive(piIotNode.PiIotNode):
         """ move car backward with specified speed. The speed ranges from 0 (stop) to 100 (backward). """
         self.motor.run(-speed)
 
+    def extraSpeed(self, deltaSpeed):
+        """ request extra speed in addition to the run speed """
+        self.motor.extraSpeed(deltaSpeed)
+
     def turnSteering(self, angle, turnSignal=True):
         """ turn the steering to the specified angle
         the angle range (in degree): -90 (max left) - 0 (straight) - +90 (max right)
@@ -70,6 +77,7 @@ class PiCarDrive(piIotNode.PiIotNode):
         the method return the achieved angle position.
         """
         value = self.steering.moveToCenter()
+        self.motor.extraSteeringSpeed(0)
         if self.turnSignal:
             self.leftLed.off()
             self.rightLed.off()
@@ -81,6 +89,7 @@ class PiCarDrive(piIotNode.PiIotNode):
         the method return the achieved angle position.
         """
         value = self.steering.moveToAngle(-angle)
+        self.motor.extraSteeringSpeed(self.extraSpeedOnSteering)
         if turnSignal:
             self.leftLed.set(ON, ON, OFF)
             self.rightLed.set(OFF, OFF, OFF)
@@ -92,6 +101,7 @@ class PiCarDrive(piIotNode.PiIotNode):
         the method return the achieved angle position.
         """
         value = self.steering.moveToAngle(angle)
+        self.motor.extraSteeringSpeed(self.extraSpeedOnSteering)
         if turnSignal:
             self.rightLed.set(ON, ON, OFF)
             self.leftLed.set(OFF, OFF, OFF)

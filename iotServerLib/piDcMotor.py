@@ -81,6 +81,7 @@ class PiDcMotor(piIotNode.PiIotNode):
         return the running speed
         """
         self._requestedSpeed = speed
+        timePrint('Run motor %s at requested speed %i' %(self.name, speed))
         return self.speed
 
     def extraSteeringSpeed(self, deltaSpeed):
@@ -111,17 +112,19 @@ class PiDcMotor(piIotNode.PiIotNode):
         if speed == 0: # stop
             self.stop()
         elif speed > 0: # forward
+            speed = min(speed, 100)
             GPIO.output(self.in1, GPIO.HIGH)
             GPIO.output(self.in2, GPIO.LOW)
             self.pwm.start(100)
             self.pwm.ChangeDutyCycle(speed)
         else: # reverse
+            speed = max(speed, -100)
             GPIO.output(self.in1, GPIO.LOW)
             GPIO.output(self.in2, GPIO.HIGH)
             self.pwm.start(0)
             self.pwm.ChangeDutyCycle(abs(speed))
         self.speed = speed
-        timePrint('Run motor %s at speed %i' %(self.name, self.speed))
+        #timePrint('Run motor %s at speed %i' %(self.name, self.speed))
         return self.speed
 
     def _motorControl(self):
@@ -129,7 +132,8 @@ class PiDcMotor(piIotNode.PiIotNode):
         self._stop()
         while True:
             absRequestedSpeed = abs(self._requestedSpeed)
-            absRunSpeed = abs(self._requestedSpeed) + self._extraSpeed + self._extraSteeringSpeed
+            extraSpeed = self._extraSpeed + self._extraSteeringSpeed
+            absRunSpeed = abs(self._requestedSpeed) + extraSpeed
             if absRequestedSpeed < MinSpeed or absRunSpeed < MinSpeed:
                 if self._motorState != MotorStop:
                     self._stop()
@@ -141,7 +145,7 @@ class PiDcMotor(piIotNode.PiIotNode):
                     else:
                         self._run(-MaxSpeed)
                     self._motorState = MotorStarting
-                    timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, self._extraSpeed))
+                    #timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, extraSpeed))
                 elif self._motorState == MotorStarting:
                     # send new speed for the motor
                     self._motorStarting(absRunSpeed)
@@ -150,7 +154,7 @@ class PiDcMotor(piIotNode.PiIotNode):
                     if absRunSpeed != abs(self.speed):
                         self._motorState = MotorStarting
                         self._motorStarting(absRunSpeed)
-                        timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, self._extraSpeed))
+                        #timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, extraSpeed))
 
             sleep(self.threadCycleInSecond)
 
@@ -160,7 +164,7 @@ class PiDcMotor(piIotNode.PiIotNode):
         if absNewSpeed <= absRunSpeed:
             absNewSpeed = absRunSpeed
             self._motorState = MotorMoving
-            timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, self._extraSpeed))
+            #timePrint('Motor %s State: %i extra: %i' %(self.name, self._motorState, self._extraSpeed))
         if self._requestedSpeed > 0:
             self._run(absNewSpeed)
         else:

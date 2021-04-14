@@ -301,9 +301,9 @@ def run(commandHandler, config):               #Main loop for tcp service
                 tcpCliSock.send('0 - starting auto mode'.encode())
             continue
 
-        elif 'opencv' in data:                 #When server receive "auto" from client,start Auto Mode
-            if commandHandler.car.setOperationMode(picarConst.FollowObjectMode):
-                tcpCliSock.send('oncvon'.encode())
+        elif 'wander' in data:                 #When server receive "wander" from client,start wander Mode
+            if commandHandler.car.setOperationMode(picarConst.AutoWanderMode):
+                tcpCliSock.send('wandering'.encode())
             continue
 
         elif 'findline' in data:               #Find line mode start

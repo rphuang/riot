@@ -40,7 +40,7 @@ class PiUltrasonic(piIotNode.PiIotNode):
             elapseTime = time.time() - t0
             if elapseTime  > self._timeout:
                 #print(self.name + ' ultrasonic timeout: ' + str(elapseTime))
-                return -1
+                return -2
         t1 = time.time()
         while GPIO.input(self.echoPin):
             elapseTime = time.time() - t0

@@ -18,6 +18,15 @@ class PiCarCamera(piIotNode.PiIotNode):
         self.debug = debug
         width=config.getOrAddInt('camera.width', 640)
         height=config.getOrAddInt('camera.height', 480)
+        # update index.html with proper width and height
+        try:
+            indexHtmlFile = config.getOrAdd('camera.indexHtml', '/home/pi/src/picarServer/templates/index.html')
+            with open(indexHtmlFile, "w", encoding="utf-8") as f:
+                url = "{{ url_for('video_feed') }}"
+                html='<html>  <head> <title>Video Streaming</title> </head> <body> <img src="%s" width="%i" height="%i"> </body></html>' %(url, width, height)
+                f.writelines('%s\n' %(html))
+        except:
+            pass
         enableFaceTracking = config.getOrAdd('camera.enableFaceTracking', 'true')
         drawCrosshair = config.getOrAdd('camera.drawCrosshair', 'true')
         self.camera = camera_pi.Camera(width=width, height=height, crosshair=drawCrosshair.startswith('true'))

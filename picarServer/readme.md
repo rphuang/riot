@@ -10,6 +10,7 @@ This is a server module that controls the Adeept PiCar-B. Besides controling wit
 * Simple Dev-ish Android client app that controls the PiCar with live video stream
 * Send command to speech to Android phone that runs the client app
 * Smart motor and drive control - control the speed during start and use ultrasonic to avoid obstacles when heading straight
+* Autonomous/semi-autonomous modes: follow by distance, wander around, face tracking, and follow line
 
 ## Installation
 1. download/clone the respository. These steps assume that the code is under /home/pi/riot.
@@ -90,8 +91,54 @@ The settings can configure the image size, enable face tracking, location of the
 * camera.enableFaceTracking=true
 * camera.classifier=/home/pi/riot/picarServer/data/haarcascade_frontalface_alt.xml
 * camera.drawCrosshair=true
+* camera.cameraDebug=false
 ### Ultrasonic Sensor Scan
-    ultrasonic.maxDistanceCm=1500
+* ultrasonic.maxDistanceCm=1500
+### Auto Stop to Avoid Obstacle
+Use these settings to adjust the auto stop of PiCar.
+* distanceScan.scanCycleInSecond=0.3
+* distanceScan.stopDistanceInMeter=0.2
+* distanceScan.slowDistanceInMeter=1.0
+* distanceScan.headingAngleLimit=20
+### Auto Mode - Wander
+For wander mode, the server controls PiCar going around mindlessly except trying to avoid obstacles detected by ultrasonic sensor.
+The following settings are used to adjust the wandering speed and turning/backwarding when avoiding obstacle.
+* auto.forwardSpeed=60      - this is used for all auto mode when moving forward
+* auto.backwardSpeed=50     - this is used for all auto mode when moving backward
+* wander.turnSpeed=70
+* wander.turnAngle=30
+* wander.turningTime=2.4
+* wander.backwardTime=0.8
+* wander.stateTimeout=5
+The following settings are used for distance scanning to find the direction with the max distance. PiCar will use the current vertical angle position for scanning.
+* wander.scan.starth=-45
+* wander.scan.endh=45
+* wander.scan.inc=10
+### Auto Mode - Face Tracking
+The face tracking mode finds a face and tracks the face by turning its head toward the tracked face.
+The following settings are used to adjust the field of view of the image from camera. This should be sdjusted based on camera and resolution.
+* faceTracking.horizontalViewAngle=54
+* faceTracking.verticalViewAngle=42
+### Auto Mode - Follow by Distance
+For this auto mode, the PiCar will follow a target based on the distance between the target and PiCar.
+The following settings are used to adjust the speed for following by distance.
+* auto.forwardSpeed=60                      - this is used for all auto mode when moving forward
+* auto.backwardSpeed=50                     - this is used for all auto mode when moving backward
+* distanceScan.stopDistanceInMeter=0.2      - this is the distance to follow (stop)
+* follow.distanceOffset=0.1
+* follow.maxFollowDistance=2.0
+### Auto Mode - Line Tracking
+For this auto mode, the PiCar will follow a line identified by the line tracking sensor.
+The following settings are used to adjust the speed for following by distance.
+* auto.forwardSpeed=60      - this is used for all auto mode when moving forward
+* auto.backwardSpeed=50     - this is used for all auto mode when moving backward
+### Command To Speech
+When commandToSpeechMode is 'on', PiCar will send the command text to RIOT service defined by commandToSpeechService with credential defined by commandToSpeechCredential.
+Use commandToSpeechList to specify all or list of commands, example: Stop,Backward,Forward,Go Straight,Go Left,Go Right,Look Straight,Look Left,Look Right,Look Down,Look Up
+* piCar.commandToSpeechMode=on
+* piCar.commandToSpeechList=All
+* piCar.commandToSpeechService=http://192.168.0.33:3333/cmd/speak
+* piCar.commandToSpeechCredential=
 ### Hardware Configuration
 This is to configure the IO pins and channels for the PiCar. Most likely, you don't have to touch these config settings.
 * motor.enable=7

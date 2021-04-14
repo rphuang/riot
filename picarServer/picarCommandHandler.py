@@ -57,6 +57,7 @@ class PiCarCommandHandler(object):
         pathLowerCase = path.lower()
         commandStatus = 'Bad Request'
         httpStatusCode = 400
+        response = None
         #print(' value: ' + valueStr)
         if valueStr != None:
             try:
@@ -124,8 +125,16 @@ class PiCarCommandHandler(object):
                         return fullResponse
                 elif 'mode' in pathLowerCase:
                     # setting mode
-                    self.doSetModeCommand(valueStr)
+                    response = self.doSetModeCommand(valueStr)
                     commandStatus = 'Set Mode to %s' %valueStr
+                elif 'ping' in pathLowerCase:
+                    # send ping to ultrasonic sensor
+                    self.car.distanceScan = False
+                    time.sleep(0.5)
+                    distance = self.head.ultrasonic.pingDistance()
+                    commandStatus = 'Ping Distance'
+                    response = {'statusCode': httpStatusCode, 'response': commandStatus, 'value': distance}
+                    self.car.distanceScan = True
                 else:
                     commandStatus = 'Unknown Device Component'
                     httpStatusCode = 400
@@ -136,7 +145,8 @@ class PiCarCommandHandler(object):
                 commandStatus = 'Exception'
                 httpStatusCode = 400
 
-        response = {'statusCode': httpStatusCode, 'response': commandStatus, 'device': pathLowerCase, 'value': valueStr}
+        if response == None:
+            response = {'statusCode': httpStatusCode, 'response': commandStatus, 'device': pathLowerCase, 'value': valueStr}
         self.commandToSpeech(commandStatus)
             
         return response
@@ -179,8 +189,10 @@ class PiCarCommandHandler(object):
             self.car.setOperationMode(picarConst.FollowDistanceMode)
         elif 'findline' in valueStrLower:
             self.car.setOperationMode(picarConst.FollowLineMode)
-        elif 'opencv' in valueStrLower:
-            self.car.setOperationMode(picarConst.FollowObjectMode)
+        elif 'wander' in valueStrLower:
+            self.car.setOperationMode(picarConst.AutoWanderMode)
+        elif 'face' in valueStrLower:
+            self.car.setOperationMode(picarConst.FaceTrackingMode)
         elif 'speech' in valueStrLower:
             self.car.setOperationMode(picarConst.ManualMode)
         else:

@@ -31,7 +31,8 @@ class PiCarHead(piIotNode.PiIotNode):
                                            centerAngle=config.getOrAddInt('verticalServo.centerAngle', 0))
         self.maxDownAngle = min(self.servoV.minAngle, self.servoV.maxAngle)
         self.maxUpAngle = max(self.servoV.minAngle, self.servoV.maxAngle)
-        self.camera = PiCarCamera('Camera', self, config, debug=True)
+        cameraDebug = config.getOrAdd('camera.cameraDebug', 'false')
+        self.camera = PiCarCamera('Camera', self, config, debug=cameraDebug.startswith('true'))
         self.scanning = False   # flag indicating ultrasonic scan is in progress
         self.heading = (self.servoH.angle, self.servoV.angle)   # direction (horizontalAngle, verticalAngle)
 

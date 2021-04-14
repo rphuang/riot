@@ -31,10 +31,13 @@
     </ContentPage.Resources>
 
     <StackLayout Padding="8" VerticalOptions="Fill" HorizontalOptions="Fill">
-        <ScrollView Padding="2,2,2,2" VerticalOptions="FillAndExpand"  HorizontalOptions="FillAndExpand" x:Name="webPanel">
-            <!-- WebView needs to be given height and width request within layouts to render. -->
-            <WebView x:Name="webView" WidthRequest="640" HeightRequest="480" Scale="1" />
-        </ScrollView>
+        <!-- WebView needs to be given height and width request within layouts to render. -->
+        <WebView x:Name="webView" WidthRequest="600" HeightRequest="600" Scale="1" />
+        <!-- this works well for the following devices
+              * streaming 800x600 on tablet device with 1920x1200 resolution (Samsung Tablet A)
+              * streaming 600x400 on tablet device with 1024x600 resolution
+            <WebView x:Name="webView" WidthRequest="600" HeightRequest="600" Scale="1" />
+        -->
         <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

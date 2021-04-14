@@ -37,6 +37,7 @@ class FaceTracker():
         self.frameCounter = 0              # current frame number
         self.nextFaceID = 0                # sequence ID for face deteced
         self.trackedFaces = {}             # dictionary for the tracked faces' data key=face ID, value=FaceTrackingData 
+        self.imageShape = ()               # the image shape for tracked faces
 
     def detectOrTrack(self, img):
         """ this is the main function for FaceTracker to track the faces inside images
@@ -119,6 +120,7 @@ class FaceTracker():
             if self.debugMode:
                 msg = self.trackedFaces[fid].name + '  ' + str(self.trackedFaces[fid].quality)
                 cv2.putText(img, msg, (int(t_x), int(t_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        self.imageShape = img.shape
         return img
 
     def detectFaces(self, img):
@@ -129,9 +131,13 @@ class FaceTracker():
         faces = self.faceClassifier.detectMultiScale(grayImg, self.scaleFactor, self.minNeighbors)
         return faces
 
-    def getTrackingData(self):
+    def getTrackedFaces(self):
         """ get the current tracking data - a dictionary of FaceTrackingData with ID as key and FaceTrackingData as value """
         return self.trackedFaces
+
+    def getImageShape(self):
+        """ get the image shape for tracked faces """
+        return self.imageShape
 
 class FaceTrackingData():
     """ face tracking data that contains:

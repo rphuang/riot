@@ -113,13 +113,13 @@ class BaseCamera(object):
     def current_trackingvalues(self):
         """ return the current FaceTrackingData values """
         if BaseCamera.faceTracker != None:
-            return BaseCamera.faceTracker.getTrackingData().values
+            return BaseCamera.faceTracker.getTrackedFaces().values
         return None
 
     def current_trackingdata(self):
         """ return the current dictionary of FaceTrackingData (key: id, value: FaceTrackingData) """
         if BaseCamera.faceTracker != None:
-            return BaseCamera.faceTracker.getTrackingData()
+            return BaseCamera.faceTracker.getTrackedFaces()
         return None
 
     @staticmethod

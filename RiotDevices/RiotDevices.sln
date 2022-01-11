@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpLib", "..\HttpLib\HttpL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riot.Phone", "..\Riot.Phone\Riot.Phone.csproj", "{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogLib", "..\LogLib\LogLib.csproj", "{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +201,18 @@ Global
 		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhone.Build.0 = Release|Any CPU
 		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{FD4B4FD2-B1D6-41B8-8101-83B45EB6D888}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|iPhone.Build.0 = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{950BAF15-CBE8-4F83-9B19-C1228DF8F5D0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
